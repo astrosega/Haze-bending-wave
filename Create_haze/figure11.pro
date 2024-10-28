@@ -1,6 +1,9 @@
 pro figure11
 
-;Produces the vizualizaton of the haze (figure 11) shown in Sega et al 2024. The code uses the routine haze_creation.pro which is the core simulation that computes the trajectories of particles after their collisions with the self-gravity wakes
+;Produces the vizualizaton of the haze (figure 11) shown in Sega et al 2024. 
+
+;Requirements
+;The code uses the routine haze_creation.pro (included in this directory) which is the core simulation that computes the trajectories of particles after their collisions with the self-gravity wakes
 ;
 ;Change Log
 ;
