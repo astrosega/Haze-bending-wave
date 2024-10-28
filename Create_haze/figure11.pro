@@ -4,7 +4,7 @@ pro figure11
 ;
 ;Change Log
 ;
-;Date created 09-09-2020
+;Date created 09-09-2022
 
   G  = 6.67408e-11      ;SI
   cD = 1.50217913e-7    ;this is the curly D in SCL, (1/s^2)
