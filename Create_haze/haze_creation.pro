@@ -36,53 +36,33 @@ pro haze_creation, phi, theta, omega, i, sigma, nhits, epsilon, x, upper, slope,
                                 ;orbital paramenters from Mimas taken from Nasa webpage
 
   C = make_array(2,nhits)
-
-
-
-                                ;SCL theory damping
-
-
-                                ;phase =  k[i]*2*!dpi/mu * epsilon * slope[i]*s
-
-  ;mu = mu + k[i] * slope[i] * s
+  
   mu1 = mu - epsilon*k[i] * sqrt(slope[i]) * s*sqrt(2.)/2. + 0.00000475
 
   B = [[cos(phi), sin(phi)],[-mu1*sin(phi), mu1*cos(phi)]]
-  R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*slope[i]*s*sqrt(2.)/2.+ 0.00000475]
+  R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*sqrt(slope[i])*s*sqrt(2.)/2.+ 0.00000475]
 
   C[* , 0] = Invert(B) ## R     ; I verified this is the right operator for this order of opertations
   
   if keyword_set(landr) and nhits gt 1 then begin
     mu2 = mu + epsilon*k[i] * sqrt(slope[i]) * s*sqrt(2.)/2.+ 0.00000475
     B = [[cos(phi), sin(phi)],[-mu2*sin(phi), mu2*cos(phi)]]
-    R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*slope[i]*s*sqrt(2.)/2.+ 0.00000475]
+    R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*sqrt(slope[i])*s*sqrt(2.)/2.+ 0.00000475]
 
     C[* , 1] = Invert(B) ## R     ; I verified this is the right operator for this order of opertations
     nhits = 1
   endif
 
-for j = 1, nhits-1 do begin
+for j = 1, nhits-1 do begin ;This considers the scenario where a ring particles get hit multiple times. Does not change the results in Sega et al. 2024.
 
 ;print,  k[i]*!dpi/mu * epsilon * slope[i]*s
 ;print, C[0, j-1]
 
 phi = phi + !dpi ;+ k[i]*2*!dpi/mu *
-;epsilon * slope[i]*s ;-
-;acos(mu/omega)
-;print, atan((1-C[0]/A*damp[i])*A*damp[i]/C[1])
 
 alt = 0
 
 B = [[cos(phi), sin(phi)],[-mu*sin(phi), mu*cos(phi)]]
-;R = [A*damp[i]*cos(phi),-omega*A*damp[i]*sin(phi)*(1+epsilon)- epsilon*mu*(-C[0,j-1]*sin(phi) +  C[1,j-1]*cos(phi))  +  alt*epsilon*slope[i]*s]
-
-
-;R = [A*damp[i]*cos(phi),1*mu*(C[0,j-1]*sin(phi) - C[1,j-1]*cos(phi))*epsilon ] -abs((0.4)*mu*(C[0,j-1]*sin(phi) -C[1,j-1]*cos(phi)  +mu*A*damp[i]*sin(phi))) ]
- 
- ;R = [A*damp[i]*cos(phi),-mu*A*damp[i]*sin(phi) +epsilon*mu*(C[0,j-1]*sin(phi) -C[1,j-1]*cos(phi) +mu*A*damp[i]*sin(phi)) ]
-
-;R = [A*damp[i]*cos(phi),-omega*A*damp[i]*sin(phi)*(1/10. -epsilon) +(9./10.)*mu*(-C[0,j-1]*sin(phi) +C[1,j-1]*cos(phi)) ]
-;R = [A*damp[i]*cos(phi),-omega*A*damp[i]*sin(phi)*(1 -epsilon)*(1/2.) + (1./2.)*(1 +epsilon) * mu*(-C[0,j-1]*sin(phi) +C[1,j-1]*cos(phi)) ]
  R = [A*damp[i]*cos(phi),-omega*A*damp[i]*sin(phi)*(1 +epsilon)*(2./3.) + (1./3.)*(1 -2*epsilon) * mu*(-C[0,j-1]*sin(phi) +C[1,j-1]*cos(phi)) ]
 
 C[*,j] = Invert(B) ## R
