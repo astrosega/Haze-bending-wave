@@ -1,4 +1,4 @@
-;Program that uses a SHO model being kicked at different points in its
+;Program that uses a SCL model being kicked at different points in its
 ;trayectory to create a Haze
 ;it takes an angle phi, which is the phase at which the SHO is
 ;initially kicked
