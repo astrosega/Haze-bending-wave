@@ -12,7 +12,7 @@
 
 ;Example
 ;IDL> saturn_func([1.48, 0.0623., 370],plot=1) epsilon1 phase theory
-;IDL> saturn_func([1.39, 0.0576., 367],plot=1) epsilon1 phase obs   (1.3905730     0.057039060       366.76825) if magnus2 is used (the other dataset that does substract the background from Irr) chi¨2 4.5189223
+;IDL> saturn_func([1.39, 0.0576., 367],plot=1) epsilon1 phase obs   (1.3905730     0.057039060       366.76825) if magnus2 is used (the other dataset that does substract the background from Irr) chi¨2 4.5189223, if the sqrt(slope) is used in haze_creation, then 4.5171900
 ;IDL> saturn_func([1.37, 0.057., 366],plot=1) epsilon0.5 phase obs
 
 ;IDL> IDL> amoeba(0.001 ,function_name = 'saturn_func', scale=[.1,0.005, 1.], P0 = [3.2, 0.054, 364], function_value = f)

@@ -9,14 +9,44 @@ function haze_func , upper, damp, res, sigma, fase, x,epsilon
   ; damp  -> the damping terms of the wave profile
   ; res   -> the desired resolution of the haze (in km)
   ; sigma -> surface mass density of the A-ring in te wave region
+  ; fase  -> the phase of the wave
   ; x     -> the radial vector
+  ; epsilon-> coefficient of resitution
   
   
   ;Output
   ; y_haze -> a 2D array. The two rows correspond to the upper (y_haze[*,0]) and lower (y_haze[*,1]) vertical coordinates for the haze outline.
+  
+  ;Example
+  ;
+  ;Fist you need to draw the wave. Start by defining the radial vector.
+  ;IDL> reso  =   0.001d ;km ;This is the resolution of the x axis, not of the ray-tracing
+  ;IDL> km    = 300
+  ;IDL> start = -21
+  ;IDL> x     = dindgen(round(km*(1/reso)), Increment=reso, start=start) ;radial axis, in Km. t=0 at resonance
+  ;;Then draw the wave profile
+  ;IDL> G  = 6.67408e-11    
+  ;IDL> cD = 1.50217913e-7    ;this is the curly D in SCL, (1/s^2)
+  ;IDL> mu = 1.2957087e-4     ;(1/s) vertical frequency of particles
+  ;IDL> rv    = 131902.0
+  ;IDL> sigma = 363
+  ;IDL> v     = 0.005
+  ;IDL> dampingfactor = (1./3.)*(cD^2)*mu/(2*!Dpi*G*sigma)^3             ;this is in SI (meters. remember t and rv are in km)
+  ;IDL> damp          =  Exp(-((x^3/rv^2)*1000.*(dampingfactor)*(v)))    ;the 1000 is to transform x into meters since the viscosity is in meters
+  ;IDL> Hsigma=(sigma/1000.)
+  ;IDL> A=(476.92/(Sqrt(Hsigma)))/1000.
+  ;IDL> e=(2d*!DPI*G*sigma/(rv*1000d*cD))
+  ;IDL> phase = !dpi
+  ;IDL> upper = A * damp * (1./(sqrt(!DPI))) * Exp(j*(phase + !DPI/4.)) * (Exp(j*x^2/(2.*e*rv*rv))*(0.5*sqrt(!DPI/2.)-0.5*j*sqrt(!DPI/2) + fresnel_complex(x/(sqrt(2.*e)*rv))))
+  ;;Then choose a coefficient of resitution and the desired radial resolution of the haze to then finally write the function call
+  ;IDL> epsislon = 0.5
+  ;IDL> res = .4d
+  ;IDL> y_haze = haze_func(upper, damp, res, sigma, fase, x,epsilon)
+
 
 ;Change Log
 ;Created on 02/04/2022 by Daniel Sega
+;10/28/24 ---> Added the example
 
  
   indi = 0
