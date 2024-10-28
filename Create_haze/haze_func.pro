@@ -1,5 +1,22 @@
-function haze_func , upper, damp, res, sigma, fase, x,epsilon,reso
+function haze_func , upper, damp, res, sigma, fase, x,epsilon
+  ;Outline
+  ;A function that calls that takes in the parameters of the wave and a coefficient of rensitution, and calls the haze_creation.pro routine to create a haze envolpe for the input wave.
+  ;
+  ;
+  ;
+  ;Inputs
+  ; upper -> the wave profile
+  ; damp  -> the damping terms of the wave profile
+  ; res   -> the desired resolution of the haze (in km)
+  ; sigma -> surface mass density of the A-ring in te wave region
+  ; x     -> the radial vector
+  
+  
+  ;Output
+  ; y_haze -> a 2D array. The two rows correspond to the upper (y_haze[*,0]) and lower (y_haze[*,1]) vertical coordinates for the haze outline.
 
+;Change Log
+;Created on 02/04/2022 by Daniel Sega
 
  
   indi = 0
