@@ -1,7 +1,14 @@
 ;Outline
 ;A version of saturn_star that is written to plot the 'BetCen085*' UVIS occultation and the SCL model. It does the ray tracing with a high resolution by computing the entry and exit points of the lightray in th bent ring. The equation for the wave is taken from Shu et al 1983. The code also plots the amplitude and the slope of the wave per
 ;Shu et al 1983 and compares these to the data. The two plots are plotted side to side.
-; It requires saturn_robust.sav and calls the "magnus" directory
+;
+;Requirements
+;saturn_robust.sav
+;calls the "magnus" directory
+;Fresnel_complex.pro -> (in the root of the repositorty). Computes the complex fresnel integral nescessary to draw the SCL wave.
+;func_shugampeg.pro  -> in this directory,
+;
+
 
 ;Purpose
 ;To produce Figure 3 in Sega et al 2024 ICARUS.

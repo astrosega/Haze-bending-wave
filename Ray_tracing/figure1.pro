@@ -5,6 +5,10 @@
 ;
 ;stars_robust.sav                    ---- contains the geometrical parameters of the diffent stars occultated by the rings used in this study
 ;GamPeg032I_Mimas53BW_400m_res.sav   ---- the occultation to be simulated binned to 400m of radial resolution. These and all the other stellar occultation files used are under a folder named "magnus" in the GitHub repository
+;Fresnel_complex.pro -> (in the root of the repositorty). Computes the complex fresnel integral nescessary to draw the SCL wave.
+;oplotmimas.pro      -> In this directory. Plot warper.
+;func_shugampeg.pro  -> in this directory,
+;The Coyote library
 ;
 ;Authors
 ;Daniel Sega

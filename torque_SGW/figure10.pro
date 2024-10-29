@@ -1,6 +1,15 @@
 Pro figure10
 ;Description
-;Program that runs wpl232dt200 for 1 period runs for a number of slope values. It produces figure 10 in Sega et al 2024. The wake dimensions are L=232m, W=18m, H=4m and the timesstep is 200 seconds (twice as much as in figure 8 and 9's wpl232dt97.pro andn nwpl232dt97.pro) 
+;Program that runs wpl232dt200 (with a gravitational focusing approach) for 1 period runs for a number of slope values. It produces figure 10 in Sega et al 2024. The wake dimensions are L=232m, W=18m, H=4m and the timesstep is 200 seconds (twice as much as in figure 8 and 9's wpl232dt97.pro andn nwpl232dt97.pro)
+
+;Requirements
+;torquecol1.pro
+;torquecol2.pro
+;linspace.pro
+;The Coyote Library
+
+;Log
+;Creted by Daniel Sega --> 10-29-2024
 
 
   h   = 4.
@@ -421,7 +430,7 @@ Pro figure10
 
   print, times
   print, timesk2
-  save, rms, modes,rms2,modes2, filename = 'linearfigure10.sav'
+  ;save, rms, modes,rms2,modes2, filename = 'linearfigure10.sav'
 
   wi,2
   !p.multi=[0,0,0]

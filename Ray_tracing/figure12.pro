@@ -481,11 +481,10 @@ star_i=0
     riso = r
     optdiso = optd
   
-  sm=1
-    if star_i eq 5 then sm=70
-    ; if star_i eq 6 then sm=70
+  sm=5 ;the simulated data vector got slightly smoothed in the paper to eliminate some jagginess from the peaks that are a product of the ray-tracing.
 
-    iso  = plot(r-rv, optd,sm, xrange=[-200.,50.], yrange=[0.,5.], thick=2, name="This Work",linestyle=0, dimensions = [1366,768], buffer= 0);,/nodata)
+
+    iso  = plot(r-rv, smooth(optd,sm), xrange=[-200.,50.], yrange=[0.,5.], thick=2, name="This Work",linestyle=0, dimensions = [1366,768], buffer= 0);,/nodata)
     print,phase
     
     riso=r
@@ -507,13 +506,13 @@ star_i=0
         optd = junk[*,1]
 
 
-aniso   = plot(rscl-rv, optd,sm, xrange=[-200.,50.], yrange=[0.,max([max(optd),max(tao), max(optdiso)])+.6], thick=3, name="SCL",linestyle=2, dimensions = [1366,768], buffer=0,overplot=1, color='green')
+aniso   = plot(rscl-rv, optd, xrange=[-200.,50.], yrange=[0.,max([max(optd),max(tao), max(optdiso)])+.6], thick=3, name="SCL",linestyle=2, dimensions = [1366,768], buffer=0,overplot=1, color='green')
 
 graphic4   = oplotmimas(radius,data,star='('+stars_format+')',tao=tao, title=1, uperror=taoplus,downerror=taominus,angles=angles);,scl=1);, error=taosigma) ;, angles = [B, phi], phase = phase_print)
 ; if star_i eq 6 then sm=5
 graphic5   = plot(rscl-rv, optd, xrange=[-200.,50.], yrange=[0.,max([max(optd),max(tao), max(optdiso)])+.6], thick=3, name="New Model",overplot=1,linestyle=2, dimensions = [1366,768], color='green')
 
-graphic5   = plot(riso-rv, optdiso,sm, xrange=[-200.,50.], yrange=[0.,max([max(optd),max(tao), max(optdiso)])+.6], thick=3, name="New Model",overplot=1,linestyle=0, dimensions = [1366,768])
+graphic5   = plot(riso-rv, optdiso, xrange=[-200.,50.], yrange=[0.,max([max(optd),max(tao), max(optdiso)])+.6], thick=3, name="New Model",overplot=1,linestyle=0, dimensions = [1366,768])
 
 
    ; leg  = legend(position=[.9,.8], font_size = 20,target=[aniso,graphic4])

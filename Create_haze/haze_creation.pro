@@ -32,22 +32,23 @@ pro haze_creation, phi, theta, omega, i, sigma, nhits, epsilon, x, upper, slope,
   R = 60330000                  ;
 
   omegaM = 0.0000771634
-  muM    = 0.000077365
-                                ;orbital paramenters from Mimas taken from Nasa webpage
+  muM    = 0.000077365          ;orbital paramenters from Mimas taken from Nasa webpage
+  w      = 0.00000475
 
   C = make_array(2,nhits)
   
-  mu1 = mu - epsilon*k[i] * sqrt(slope[i]) * s*sqrt(2.)/2. + 0.00000475
-
+  mu1 = mu - epsilon*(k[i] * sqrt(slope[i]) * s*sqrt(2.)/2. + w)
+  ;this "Doppler shift" of the natural vertical frequency is a way of accounting for the radial travel of the particles after the collision. The effect, however, is small. One can see these equation as the equation of the z-coordinate of the particle above a self-gravity wake in an Eulerian frame, instead of a Z-coordinate that follows an ejected particle.
+  ;The difference between these two vertical motions is encompased in this expresion.
   B = [[cos(phi), sin(phi)],[-mu1*sin(phi), mu1*cos(phi)]]
-  R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*sqrt(slope[i])*s*sqrt(2.)/2.+ 0.00000475]
+  R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*(sqrt(slope[i])*s*sqrt(2.)/2.+ w)]
 
   C[* , 0] = Invert(B) ## R     ; I verified this is the right operator for this order of opertations
   
   if keyword_set(landr) and nhits gt 1 then begin
-    mu2 = mu + epsilon*k[i] * sqrt(slope[i]) * s*sqrt(2.)/2.+ 0.00000475
+    mu2 = mu + epsilon*k[i] * sqrt(slope[i]) * s*sqrt(2.)/2.+ w
     B = [[cos(phi), sin(phi)],[-mu2*sin(phi), mu2*cos(phi)]]
-    R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*sqrt(slope[i])*s*sqrt(2.)/2.+ 0.00000475]
+    R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*(sqrt(slope[i])*s*sqrt(2.)/2.+ w)]
 
     C[* , 1] = Invert(B) ## R     ; I verified this is the right operator for this order of opertations
     nhits = 1

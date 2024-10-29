@@ -1,21 +1,15 @@
 ;Program that inegrates Hill equations of motion. The goal is to inegrate the trajectories to study the rotational evolution of self-gravity wakes.
 ;
+;Requirements.
+;tsum.pro
+;
 ;Log:
 ;
 ;3/30/2023 -> created
 ;
 ;
 ;
-;FUNCTION differential, X, Y
 
-;Ax = -(-2 Vy[t] + X[t] (-3 + 3/(X[t]^2 + Y[t]^2)^(3./2.)))
-;Ay = -( 2 Vx[t] +      (3*Y)/(X^2 + Y^2)^(3./2.))
-
-;deltaX/h = Vx
-;deltay/h = Vy
-
-;  RETURN, [-0.5 * Y[0], 4.0 - 0.3 * Y[1] - 0.1 * Y[0]]
-;END
 
 function Hillcol4DZ, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0, z1, z2, omegax,omegay,omegaz, ind=ind, phis=phis, oldphi = oldphi, dhdot = dhdot, thetaxs = thetaxs, thetays = thetays, intw=intW, IntH=inth, intl=intl, vzrecord=vzrecord
   omegax1=omegax

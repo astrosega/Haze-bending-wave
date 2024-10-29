@@ -28,6 +28,11 @@ Pro wpl77dt97, seconds, omega, thetaxs36, thetays36, phis36, deltav36, deltavk36
   ;z2s36                    --> projection of the omega_z vector into the vertical direction over time.
   ;dhdot                  --> local slope of the wave over time.
   
+  ;Requirements
+  ; HILLCOL4DZ.pro
+  ; linspace.pro
+  ; tsum.pro
+  
   ;Change log
   ;08-29-2022  --> created by Daniel Sega
 

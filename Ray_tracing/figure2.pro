@@ -2,6 +2,12 @@
 ;A version of saturn_star.pro that is written to plot the GamPeg32I UVIS occultation and the SCL model. It does the ray tracing with a high resolution by computing the entry and exit points of the lightray in th bent ring. The equation for the wave is taken from Shu et al 1983.
 ; It requires saturn_robust.sav and calls the "magnus" directory---a folder with the 60 occultations used for Sega et al 2024 (which are binned to 400m).
 
+;Requirements;
+;stars_robust.sav                    ---- contains the geometrical parameters of the diffent stars occultated by the rings used in this study
+;GamPeg032I_Mimas53BW_400m_res.sav   ---- the occultation to be simulated binned to 400m of radial resolution. These and all the other stellar occultation files used are under a folder named "magnus" in the GitHub repository
+;Fresnel_complex.pro -> (in the root of the repositorty). Computes the complex fresnel integral nescessary to draw the SCL wave.
+;oplotmimas_fig212.pro      -> In this directory. Plot warper.
+
 ;Purpose
 ;To produce Figure 2 in Sega et al 2024 ICARUS.
 ;
@@ -100,27 +106,8 @@ pro Figure2
     ;Open a file with the data already converted into optical depth (tao), and a radius (radius) vector
     Restore, star_file
 
-    ;I'm reading off the parameter of Mimia's orbit
-    ;Restore, Filepath('Mimas_lon_z_danielOX.sav', subdir = ['Mimas_data'])
-    ; Restore, 'Mimas_lon_z_danielOX.sav'
-    ;  Restore, 'mimascoor.sav'
-
-    ;I'm reading off the geometry of the occultation
-    ; ;Restore, 'geometries.sav'
-    ;Restore, 'geometry.sav'
-
-
-    ;Finally, I'm reading off the value for the normal optical depth of the hump according to the granola bar model (Jerousek 2016)
-    ;  Restore, 'granola_haze.sav'
-
-    ;  i_geo  = where(stars[star_i] EQ rev)
-    ; i_mimas= i_geo + 1
-
     i_geo  = star_i
     i_mimas= star_i
-
-
-
 
     vuelta = 0
     flip1 = 0
@@ -132,26 +119,11 @@ pro Figure2
         ; print,  stars[star_i]
         flip1 = !dpi
       endif
-      ;  endif
-      ;  if (phi[i_geo[0]] GT 180) then up_down[i_mimas] = -1*up_down[i_mimas]
-      ;   if (phi[i_geo[0]] LE 270 AND phi[i_geo[0]] GE 90) then up_down[i_mimas] = -1*up_down[i_mimas]
-
     endif
 
     if  B[i_geo[0]] gT 0 then begin
-      ; if (phi[i_geo[0]] gt 175) then flip2 = !dpi
-      ;      lon_mimas[i_mimas] = -lon_mimas[i_mimas]
-      ;strings = stars[star_i]
-      ;   if strmatch(strings.Substring(-1), 'E') then flip2 = !dpi
-      ;if ((phi[i_geo[0]] LE 90) OR ((phi[i_geo[0]] LE 360 AND phi[i_geo[0]] GE 270))) then  begin
-      ; if star is the in the south, then antiradial works but radial needs to be corrected
-      ;        if ((phi[i_geo[0]] LE 90) OR phi[i_geo[0]] GE 270)  then begin
       if (phi[i_geo[0]] gE 270 or phi[i_geo[0]] lE 90) then begin
         flip1 = !dpi
-
-        ;  if (phi[i_geo[0]] LE 270 AND phi[i_geo[0]] GE 90) then flip1 = !dpi
-        ; up_down[i_mimas] = -1*up_down[i_mimas]
-        ;z_mimas[i_mimas] = -z_mimas[i_mimas]
       endif
 
       ; if (phi[i_geo[0]] lt 180) then lon_mimas[i_mimas] = -lon_mimas[i_mimas]

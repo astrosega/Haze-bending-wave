@@ -1,6 +1,12 @@
 pro figure14
-
-  ;Program that plots different viscosities from the Mimas 5:3 beding.
+  ;Outline
+  ;Program that plots different viscosities from the Mimas 5:3 beding wave. Ir produces figure 14 from Sega et al 2014, ICARUS.
+  ;
+  ;Requirements
+  ;The Coyote library
+  ;
+  ;Change Log
+  ;Created by Daniel Sega - 06-23-2023
   ;
   !p.multi=0
 
@@ -35,31 +41,17 @@ cgtext, [131.32], [120], 'Pandora 9:5 ILR',charsize=3
   ;; Isotropic model
   cgoplot, [131.902], [580], psym=17,xrange=[131400,133100],symsize=4, err_color=cgcolor('magenta'),color='magenta',thick=2
   ;,/window
-  ;cgoplot, [131902], [590], psym=17,xrange=[131400,133100],yrange=[50,850],symsize=2, err_color=cgcolor('dark green'),color='dark green';,/window
-  ;cgoplot, [131902], [500], psym=17,xrange=[131400,133100],yrange=[50,850],symsize=2, err_color=cgcolor('brown'),color='brown';,/window
 
 
   cgoplot, [131.902], [340], psym='filledcircle',xrange=[131.4,133.15],yrange=[0,850],err_yhigh=200,err_ylow=100,$
     err_color=cgcolor('blue'),color='blue', symsize = 4,ytitle='Ring viscosity (cm$\up2$ s$\up-1$)',$
     xtitle='Radius (Mm)',charsize=4.2,thick=2,err_thick=2
 
-  ; cgoplot, [131902], [528], psym=18,xrange=[131400,133100],yrange=[50,850],symsize=2
-  ; cgoplot, [131902], [518], psym=18,xrange=[131400,133100],yrange=[50,850],symsize=2
-  ; cgoplot, [131902], [420], psym=18,xrange=[131400,133100],yrange=[50,850],symsize=2
-
-
-
-  ;cgLegend, Psym=[16, 14, 15,6 ,17,18], Location=[0.42, 0.85],  Titles=['Gresh et al.', 'Lissauer (1984)','Tiscareno et al. (2007)', 'Esposito et. al (1983)', 'Isotropic Model (this work)', 'Anisotropic Model (this work)'],$
-  ;   Length=0, VSpace=2.75,/Background, bg_color='white',charsize=3.5,symthick=2,symsize=3,color=['blue','red','black','orange','cyan','black'];,/window
-
   colors=['blue','cyan','black','red','magenta'];
   items =['Gresh et al. (1986)', 'Lissauer (1984)','Tiscareno et al. (2007)', 'Esposito et. al (1983)', 'This work']
   Psym=[16, 14, 15,6 ,17]
 
   al_legend,items,psym=psym,color=colors,charsize=3.5,thick=2.3,symsize=3.3,position=[132, 600];,/top,/right
-
-  ;cgLegend, Psym=[16, 14, 15,6 ,18], Location=[0.65, 0.85],  Titles=['Gresh et al.', 'Lissauer','Tiscareno et al.', 'Esposito et. al', 'This Work'],$
-  ;  Length=0, /Box, VSpace=2.75,/Background, bg_color='white',charsize=2.5,symthick=2;,/window
 
   write_png,'visc1'+ '.jpg',TVRD(/TRUE)
 
