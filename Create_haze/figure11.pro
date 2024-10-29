@@ -11,7 +11,7 @@ pro figure11
 ;
 ;Date created 09-09-2022
 
-epsilon = 0.5
+epsilon = .5
 
   G  = 6.67408e-11      ;SI
   cD = 1.50217913e-7    ;this is the curly D in SCL, (1/s^2)
@@ -225,8 +225,8 @@ epsilon = 0.5
 
   a=max(zmax(where(rad gt 40)),i)
   b=min(zmin(where(rad gt 40)),j)
-  junk = min(abs(rad - 20),i)
-  junk = min(abs(rad - 150),j)
+  junk = min(abs(rad - 10),i)
+  junk = min(abs(rad - 140),j)
   
  
 
@@ -234,8 +234,9 @@ epsilon = 0.5
 
   print,'maximum thickness of the haze [km] =', max(zmax-zmin) ;For epsilon=0,1 I get 0.052 km. For epsilon = 1, 0.32 km. For epsilon=0,5 I get 0.164713 km
   print,'minimum thickness of the haze [km] within the wave =', min(zmax[i:j]-zmin[i:j],k) ;For epsilon=0.5 I get 0.0704 km.
-;  print,rad[k]
-;   PLOT,rad,(zmax-zmin)
+  rad2 =rad[i:j] 
+  print,rad2[k]
+  PLOT,rad,(zmax-zmin)
   der = ((shift(zmax,-1)-zmax)/(rad[10]-rad[11]))
   print, 'maximum slope of the haze =',max(abs(der[0:-2]))
 

@@ -39,19 +39,7 @@ function Hillcol4DZ, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0,
   thetays[ind] = tetay; acos(y1)
 
   if ~finite(y0) then print, 'it has happened'
-  ;  print,'y0', y0
-  ;  print,'y1', y1
-  ;print,'y2', y2
-  ;  print,'z0', z0
-  ;  print,'z1', z1
-  ;  print,'z2', z2
-  ;  print,'x0', x0
-  ;  print,'x1', x1
-  ;  print,'x2', x2
-  ;  print, y0^2 + y1^2 + y2^2
-  ;  print, z0^2 + z1^2 + z2^2
-  ;  print, x0^2 + x1^2 + x2^2
-  ;endif
+
   fudge1x = tsum(intw,Exp(-(z2*(H/2)/(std/2)  + intw*x2/(std/2))^2))
   fudge1y = tsum(intl, Exp(-(z2*(H/2)/(std/2) + intl*y2/(std/2))^2))
   fudge1z = tsum(inth,Exp(-(x2*(W/2)/(std/2) + inth*z2/(std/2))^2)) ;you don't use this
@@ -384,22 +372,6 @@ function Hillcol4DZ, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0,
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;bs[yind]*rh WASNT THE CASE FOR THE SUBMITTED PAPER. RATHER, just bs[yind]
     torquey =  -4*fudge1y*tsum(bs2, abs(v0*signum(z1)*signum(y2) + (dhdot*x0*z2 + omegay1) * q1) * (v0*signum(z1)*signum(y2) + (dhdot*x0*z2 + omegay1) * q1) * rho_mean * fudge * q1)
 
-    ;torquey =  -4*fudge1y*tsum(bs2, abs(v0*signum(z1)*signum(y2) + (dhdot*x0*z2 + omegay1) * q1/abs(cos(tetay))) * (v0*signum(z1)*signum(y2) + (dhdot*x0*z2 + omegay1) * q1/abs(cos(tetay))) * rho_mean * fudge * q1/abs(cos(tetay)))
-
-
-    ; torquey =  -4*fudge1y*tsum(bs2, abs(v0*signum(y2)*(abs(sin(phi)*z0) + abs(cos(phi)*z1)) + (dhdot*x0*z2 + omegay1) * q1/abs(cos(tetay))) * (v0*signum(y2)*(abs(sin(phi)*z0) + abs(cos(phi)*z1)) + (dhdot*x0*z2 + omegay1) * q1/abs(cos(tetay))) * rho_mean * fudge * q1/abs(cos(tetay)))
-    ;torquey =  -4*fudge1y*tsum(bs2, abs(v0*signum(y2) + (dhdot*x0*z2 + omegay1) * q1/abs(cos(tetay))) * (v0*signum(y2) + (dhdot*x0*z2 + omegay1) * q1/abs(cos(tetay))) * rho_mean * fudge * q1/abs(cos(tetay)))
-
   endelse
-
-
-  ;  toc
-  ;plothill,x,y,bs;,norange=1
-
-  ;if torquez gt 1e7 then begin
-  ; print,'stop'
-  ;endif
-  ;  print,torquez
-  ;  print,'phi',phi*180/!dpi
   return,[torquey,torquex,torquez]
 end
