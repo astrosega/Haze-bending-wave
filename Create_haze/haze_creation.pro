@@ -1,6 +1,6 @@
 ;Program that uses a SCL model being kicked at different points in its
 ;trayectory to create a Haze
-;it takes an angle phi, which is the phase at which the SHO is
+;it takes an angle phi, which is the phase at which the SCL is
 ;initially kicked
 pro haze_creation, phi, theta, omega, i, sigma, nhits, epsilon, x, upper, slope, damp, k, A = A, koeffs = koeffs,s=s, plotf = plotf, fase = fase, landr = landr,c=c
 
@@ -38,19 +38,19 @@ pro haze_creation, phi, theta, omega, i, sigma, nhits, epsilon, x, upper, slope,
   C = make_array(2,nhits)
    
       
-  mu1 = mu - epsilon*(k[i] * sqrt(slope[i]) * s + w)*1/sqrt(2) ;This commented out part is the Doppler shift mentioned on the paper. The radial velocity (v_0x in the paper) is computed by assuming that the collision speeds are at a 45° angle in the radial-vertical plane. 
+  mu1 = mu ;- epsilon*(k[i] * sqrt(slope[i]) * s + w)*1/sqrt(2) ;This commented out part is the Doppler shift mentioned in Sega et al 2024, ICARUS. The radial velocity (v_0x in the paper) is computed by assuming that the collision speeds are at a 45° angle in the radial-vertical plane. 
   ;This only has a small effect and it adds confusion, so I am neglecting any radial travel of the particles by commenting it out.
   ;This "Doppler shift" of the natural vertical frequency was a way of accounting for the radial travel of the particles after the collision. The effect, however, is small. One can see these equation as the equation of the z-coordinate of the particle above a self-gravity wake in an Eulerian frame, instead of a Z-coordinate that follows an ejected particle.
   ;The difference between these two vertical motions is encompased in this expresion.
   B = [[cos(phi), sin(phi)],[-mu1*sin(phi), mu1*cos(phi)]]
-  R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*(sqrt(slope[i])*s + w)*1/sqrt(2)]
+  R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*(sqrt(slope[i])*s + w)];*1/sqrt(2)]
 
   C[* , 0] = Invert(B) ## R     ; I verified this is the right operator for this order of opertations
   
   if keyword_set(landr) and nhits gt 1 then begin
-    mu2 = mu + epsilon*(k[i] * sqrt(slope[i]) * s+ w)*1/sqrt(2)
+    mu2 = mu ;+ epsilon*(k[i] * sqrt(slope[i]) * s+ w)*1/sqrt(2)
     B = [[cos(phi), sin(phi)],[-mu2*sin(phi), mu2*cos(phi)]]
-    R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*(sqrt(slope[i])*s+ w)*1/sqrt(2)]
+    R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*(sqrt(slope[i])*s+ w)];*1/sqrt(2)]
 
     C[* , 1] = Invert(B) ## R     ; I verified this is the right operator for this order of opertations
     nhits = 1
