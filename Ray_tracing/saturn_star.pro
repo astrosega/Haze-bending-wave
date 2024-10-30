@@ -1,7 +1,20 @@
-;Outline
-;Version of saturn_haze_new made to take in a string with the star name and revolution number, and to be called as a procedure in the simultanious fit
-;routine saturn_magnus. It takes the 7 relevant parameters for the model: Amplitud of hump, position of peak of hump
-; standard deviation of hump, the hight of the haze (haze_amp) and the viscosity (v), thickness of ring (d).
+;;Outline
+;A computer simulation of the dimming effect suffered by starlight when passing through the vertically bent ring due to a bending wave. It takes in a string with the star name and revolution number, 
+;It is called as a procedure in the simultanious fit routine saturn_magnus. This is an old version of Saturn_func that uses a Gaussian function for the shape of the haze instead of deriving the shape of the haze
+;from the slope of the way. This is hence more akin to Gresh et al 1986 model of the Mimas 5:3 BW.
+
+;Input
+;It takes the 7 relevant parameters for the model using a Gaussian function to model the shape of the haze: Amplitud of hump, position of peak of hump
+; standard deviation of hump, the hight of the haze (haze_amp) and the viscosity (v), thickness of ring (d). I also optionally takes the surface density (sigma)
+Plot -> Keyword. Set to 1 and plots are created.
+star -> String with the star name and rev numner (all caps). Example: "GAMPEG036E"
+
+;Requirements
+;Magnus directory with all the occultation files (the mean background optical depth for any given geometry goes into the model)
+;phases1.sav
+;stars_robust.sav
+
+;Output
 ;It returns Chi Square for the simulation
 
 
@@ -48,53 +61,14 @@ Pro SATURN_STAR, star, Amp, Peak, Dev, Ratiorad, Haze_amp, v, d, chi, Plot=plot,
   ;Open a file with the data already converted into optical depth (tao), and a radius (radius) vector
   Restore, star_file
  
- ;I'm reading off the parameter of Mimia's orbit
-  Restore, Filepath('Mimas_lon_z_danielOX.sav', subdir = ['Mimas_data'])
-  
-  ;I'm reading off the geometry of the occultation
-  Restore, 'geometries.sav'
+  restore, stars_robust.sav
   
 
   
-  i_geo  = where(star EQ rev)
-  i_mimas= i_geo + 1
-  
- ; print,star_rev[i_mimas]
-  ;print,rev[i_geo] 
- 
-  flip1 = 0
-  flip2 = 0 
-  if B[i_geo[0]] LT 0 then flip1 = !dpi
-  if ((phi[i_geo[0]] LE 90 AND phi[i_geo[0]] GE 0) OR ((phi[i_geo[0]] LE 360 AND phi[i_geo[0]] GE 270))) then flip2 = !dpi 
-  
-  B   = ( B[i_geo] /  180d)   * (!Dpi)
-  phi = (phi[i_geo]/  180d) * (!Dpi)
+  i_geo  = where(star EQ stars)
 
-  B   = B[0]
-  phi = phi[0]
-    
-
-  
-  ;For some occs on this catalog of geometries, B is given in a negative number, which means the ring is fliped upsidedown
-  ;for the values used to recreate that occultation. Because of how the code is written, we rather not change the B angle but
-  ;add a phase of Pi to the wave (it produces the same result)
-    fase = 0
-    sign = 1
-  if (UP_DOWN[i_mimas[0]] EQ '-') then begin
-    sign = -1
-    fase = !dpi
-  endif                                  ;all of this is because the sign of the velocity of mimas comes into play
-  
-  phase = -4*(lon_mimas[i_mimas[0]])*!dpi/180d + sign*asin(z_mimas[i_mimas[0]]/(sin(im)*am)) + fase - !dpi/4 + flip1 + flip2;eqn 47a in SCL\
-  phase = phase[0]
-  phase_print = phase
-while (phase_print LT 0) do begin
-  phase_print = phase_print + 2*!dpi
-endwhile
-phase_print = phase_print*180/!dpi
-
-;print,'phase =',phase_print, '   star = ', star, '  phi = ', phi*180/!dpi
-
+restore, "phases1.sav"
+phase = phases[i_geo]
 
   B = abs(B)
   Beff=abs(atan(tan(B)/cos(phi))) ;this is the effective angle (alpha in Jerousek 2012)
@@ -337,7 +311,7 @@ endif
  ; print, taosigma
 
 
-  chi = goodfit2(radius, tao, r, optd, points_in_model, taosigma=taosigma)
+  chi = goodfit3(radius, tao, r, optd, points_in_model, taosigma=taosigma)
   ;print, 'chi_gampeg032 =', chi_gampeg
 
 
