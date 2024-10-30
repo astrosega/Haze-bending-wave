@@ -90,7 +90,7 @@ pro figure11
 
   foreach phi, phis do begin
 
-    haze_creation, phi, theta, omega, i, sigma, 3, epsilon, x, upper, slope, damp, k, A = A, koeffs = koeffs,s=S, plotf=0, landr=1,c=c
+    haze_creation, phi, theta, omega, i, sigma, 2, epsilon, x, upper, slope, damp, k, A = A, koeffs = koeffs,s=S, plotf=0, landr=1,c=c
 
     graph=   plot(theta/(2*!dpi), c[0,0]*cos(theta) + c[1,0]*sin(theta),color=cgcolor('red'),overplot=1,Name=['Motion after collision'])
     if phi eq phis[0] then leg  = legend(position=[.34,.93], font_size = 21,linestyle=6)

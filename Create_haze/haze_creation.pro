@@ -1,7 +1,31 @@
-;Program that uses a SCL model being kicked at different points in its
-;trayectory to create a Haze
-;it takes an angle phi, which is the phase at which the SCL is
-;initially kicked
+;Outline
+
+;Program that uses a SCL bending wave model where the ring particles are being kicked at different points in their
+;trayectory to create a Haze.
+;
+;Input
+;phi   --> the phase at which the SCL is initially kicked
+;theta --> for how many periods are the collisions computed. The time vector in phase angle. Normally ranges from 0 to 3!dpi (which corresponds to 1.5 periods)
+;omega --> driven frequency at the point the collisions are being computed
+;i     --> Index that is used to pass down the radial position where the collisions are being computed. x[i] = radial value where the collisions are being computed
+;sigma --> surface density of the ring
+;x     --> radial vector
+;upper --> wave profile
+;slope --> complex magnitude of the slope of the wave (slope_max)
+;damp  --> the damping function of the wace
+;k     --> wave number
+;A     --> (optional) Amplitude.  If not set it sets to  A=(476.92d/(Sqrt(Hsigma)))/1000d 
+;koeffs--> output
+;s     --> contant that determined the collision velocity. 'a' in Sega et al 2024
+;plotf --> keyword. Set to produce plots
+;fase  --> (optional) phase of the wave. If not set then fase = 0
+;landr --> keyword. stands for "left and rigth." If set, it considers the effects of the radial trravel of particles in the radial and antiradial directions, as well as the vertical travel.
+;c     --> output.
+
+;Output
+;koeffs--> (2 by n_elements(theta) matrix) The z coordinates of the trajectory of the particle above the radial point x[i] considered. if landr is active, these coordinates will be an Eulerian coordinate and refer to the particle that is currently above the point x[i] considering. 
+;One coordinate refers to particles moving to the left and the other one to the right
+
 pro haze_creation, phi, theta, omega, i, sigma, nhits, epsilon, x, upper, slope, damp, k, A = A, koeffs = koeffs,s=s, plotf = plotf, fase = fase, landr = landr,c=c
 
   if ~keyword_set(A) then begin
