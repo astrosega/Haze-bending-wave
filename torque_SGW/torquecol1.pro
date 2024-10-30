@@ -1,5 +1,6 @@
 ; Function that takes the dimensions and density of the wake (l, w, h, rho), and the shear rate (s), the angular velocity (omegaz) and a vector with the ortientation of the z' Eulerian axis (z2),
 ; and the angle phi (that can be a number or a 1D array) and returns the torque on the wake.
+;The trajectories for the collisions are obtained using a gravitational focusing approach outlines in section 2 of Sega et al 2024, ICARUS
 
 ;If at the upper lever omegax is and z1 are introduce instead, and x=1, then we get the torque wrt to the x axis.
 

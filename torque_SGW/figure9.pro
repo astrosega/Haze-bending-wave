@@ -2,6 +2,12 @@
 Pro figure9
 ;Description
 ;Program that plors Figure 9 from Sega et al 2024. It rans two simulations wpl232dt97 (standing for "wake potential simulation with L=232 and a timestep of 97 seconds") and wpl77dt97  (standing for "wake potential simulation with L=77 and a timestep of 97 seconds"). As described in Sega et al 2024
+;Note that this run two instances of wake_rot24.sav for 3 periods, which takes a while (about 4 hours for me in 2024).
+
+;;Requirements (all in the torque_SGW in the astrosega github)
+;hillcol4dz.pro (to compile nwpl232dt97.pro)
+;wpl232dt97.pro
+;wpl77dt97.pro
 
    wpl232dt97, seconds, omega, thetaxs, thetays, phis, deltav, deltavk, vkdr, omegax, omegay, omegaz, w, l, h, x0s, y0s, x2s, x1s, z1s, z2s, dhdot
    wpl77dt97, seconds, omega, thetaxs36, thetays36, phis36, deltav36, deltavk36, vkdr, omegax36, omegay36, omegaz36, w, l36, h, x0s36, y0s36, x2s36, x1s36, z1s36, z2s36, dhdot

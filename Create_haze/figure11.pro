@@ -1,11 +1,12 @@
 pro figure11
 
-;Produces the vizualizaton of the haze (figure 11) shown in Sega et al 2024. 
+;Produces the vizualizaton of the haze (figure 11) shown in Sega et al 2024. Requires IDL 8.7.2 or above due to the use of fillplot
 
 ;Requirements
 ;haze_creation.pro   -> (included in this directory) which is the core simulation that computes the trajectories of particles after their collisions with the self-gravity wakes
 ;Fresnel_complex.pro -> (in the root of the repositorty). Computes the complex fresnel integral nescessary to draw the SCL wave.
 ;linspace.pro        -> (in the root of the repositorty).
+;tsumcumul.pro        -> (in the root of the repositorty).
 ;
 ;Change Log
 ;

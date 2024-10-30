@@ -2,9 +2,11 @@
 Pro figure8
 
 ;Purpose
-;Program that plots Figure 8 from Sega et al 2024. It rans simulations nwpl232dt97 (standing for "no wake potential simulation with L=232 and a timestep of 97 seconds"). As described in Sega et al 2024
+;Program that plots Figure 8 from Sega et al 2024. It rans simulations nwpl232dt97.pro (standing for "no wake potential simulation with L=232 and a timestep of 97 seconds"). As described in Sega et al 2024
 ;
-;;
+;;Requirements (all in the torque_SGW in the astrosega github)
+;hillcol4dz.pro (to compile nwpl232dt97.pro)
+;nwpl232dt97.pro 
 ;
 ;Note: The results after 2 orbital periods vary slighly from running it on my Windows 10 machine vs. Ubunutu 22. These does not affect at all what it said in the paper as this occurs after a point where the simulation becomes unphysical (as discussed in Sega et al 2024)
 

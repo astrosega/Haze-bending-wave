@@ -1,6 +1,7 @@
-;torqyecol bu for the torque abou tthe y axis
+;torqyecol but for the torque abou the y axis.
+;The trajectories for the collisions are obtained using a gravitational focusing approach outlines in section 2 of Sega et al 2024, ICARUS
 
-;If at the upper lever omegax is and z1 are introduce instead, and x=1, then we get the torque wrt to the x axis.
+;If at the upper level omegax and z1 are introduced instead, and the keyworkd x=1, then we get the torque wrt to the x axis.
 
 ;Chage Log
 ;11/01/21 Created - Daniel Sega
