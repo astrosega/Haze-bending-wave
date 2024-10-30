@@ -1,16 +1,16 @@
 ;Outline
-;A version of saturn_func that only fits the resonant radius
+;A version of saturn_func that only fits the phase of the wave
 ;
 ;Inputs
-; rv     -> resonant radius
+; P0     -> phase of the wave
 
 ;Output
 ;chi^2 -> a sum of chi^2 for all the stars in the data set we want to fit.
 
 ;Example
-;IDL> saturn_func([2.5, 0.05., 364],plot=1)
+;IDL> saturn_phase([!dpi],plot=1)
 
-;IDL> IDL> amoeba(0.001 ,function_name = 'saturn_rv', scale=[1], P0 = [132902], function_value = f)
+;IDL> IDL> amoeba(0.001 ,function_name = 'saturn_phase', scale=[1], P0 = [!dpi], function_value = f)
 
 ;Authors
 ;Daniel Sega
