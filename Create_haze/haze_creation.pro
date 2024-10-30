@@ -9,6 +9,8 @@
 ;omega --> driven frequency at the point the collisions are being computed
 ;i     --> Index that is used to pass down the radial position where the collisions are being computed. x[i] = radial value where the collisions are being computed
 ;sigma --> surface density of the ring
+;nhits --> number of consecutive hits. It considers that particles get kicked again when reentering the rings. If 1 it just considers one ejection. If landr is active ir considers 2 by dafault (one particle traveling left and the other traveling right)
+;epsilon-> coefficient of resitution
 ;x     --> radial vector
 ;upper --> wave profile
 ;slope --> complex magnitude of the slope of the wave (slope_max)
@@ -23,8 +25,10 @@
 ;c     --> output.
 
 ;Output
-;koeffs--> (2 by n_elements(theta) matrix) The z coordinates of the trajectory of the particle above the radial point x[i] considered. if landr is active, these coordinates will be an Eulerian coordinate and refer to the particle that is currently above the point x[i] considering. 
-;One coordinate refers to particles moving to the left and the other one to the right
+;koeffs--> (2 elemen array) Maximum z coordinates of the trajectory of the particle above the radial point x[i] considered. if landr is active, these coordinates will be an Eulerian coordinate and refer to the particle that is currently above the point x[i] considering. 
+;One coordinate refers to particles moving to the left and the other one to the right. landr is not active, then one would koeff[0] will reffer to the z coordinate of the ejected particle (koeff[1] will just be the z coordinate of the wake).
+;c     --> The z-coordinate is given by the equation c1*sin(theta) + c2*cos(theta). c gives these coeffitients. c[0,0] and c[0,1] are the coefficient for the particles moving saturnward, and c[1,0] and c[1,1] to the particle moving radially out. If landr is not active, c[0,0] and c[0,1] gives the z coordinates of the ejected particle, c[1,0] = A and c[1,1] = 0
+
 
 pro haze_creation, phi, theta, omega, i, sigma, nhits, epsilon, x, upper, slope, damp, k, A = A, koeffs = koeffs,s=s, plotf = plotf, fase = fase, landr = landr,c=c
 
@@ -62,19 +66,21 @@ pro haze_creation, phi, theta, omega, i, sigma, nhits, epsilon, x, upper, slope,
   C = make_array(2,nhits)
    
       
-  mu1 = mu ;- epsilon*(k[i] * sqrt(slope[i]) * s + w)*1/sqrt(2) ;This commented out part is the Doppler shift mentioned in Sega et al 2024, ICARUS. The radial velocity (v_0x in the paper) is computed by assuming that the collision speeds are at a 45° angle in the radial-vertical plane. 
-  ;This only has a small effect and it adds confusion, so I am neglecting any radial travel of the particles by commenting it out.
+  if keyword_set(landr) then mu1 = mu - epsilon*(k[i] * sqrt(slope[i]) * s + w)*1/sqrt(2) else  mu1 = mu ;if landr is active, then we include the Doppler shift mentioned in Sega et al 2024, ICARUS. The radial velocity (v_0x in the paper) is computed by assuming that the collision speeds are at a 45° angle in the radial-vertical plane. 
+  ;This only has a small effect and while I include it in Sega et al 2024, I have neglected it since. If for some reason the radial kicks where to be significantly stronger than the vertical kicks the terms will become more important
+  ;
   ;This "Doppler shift" of the natural vertical frequency was a way of accounting for the radial travel of the particles after the collision. The effect, however, is small. One can see these equation as the equation of the z-coordinate of the particle above a self-gravity wake in an Eulerian frame, instead of a Z-coordinate that follows an ejected particle.
   ;The difference between these two vertical motions is encompased in this expresion.
   B = [[cos(phi), sin(phi)],[-mu1*sin(phi), mu1*cos(phi)]]
-  R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*(sqrt(slope[i])*s + w)];*1/sqrt(2)]
+  if keyword_set(landr) then R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*(sqrt(slope[i])*s + w)*1/sqrt(2)] else $
+    R= [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*(sqrt(slope[i])*s + w)]
 
   C[* , 0] = Invert(B) ## R     ; I verified this is the right operator for this order of opertations
   
   if keyword_set(landr) and nhits gt 1 then begin
-    mu2 = mu ;+ epsilon*(k[i] * sqrt(slope[i]) * s+ w)*1/sqrt(2)
+    mu2 = mu + epsilon*(k[i] * sqrt(slope[i]) * s+ w)*1/sqrt(2)
     B = [[cos(phi), sin(phi)],[-mu2*sin(phi), mu2*cos(phi)]]
-    R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*(sqrt(slope[i])*s+ w)*1];/sqrt(2)]
+    R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*(sqrt(slope[i])*s+ w)*1/sqrt(2)]
 
     C[* , 1] = Invert(B) ## R     ; I verified this is the right operator for this order of opertations
     nhits = 1

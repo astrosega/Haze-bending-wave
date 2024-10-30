@@ -1,13 +1,13 @@
 ;;Outline
 ;A computer simulation of the dimming effect suffered by starlight when passing through the vertically bent ring due to a bending wave. It takes in a string with the star name and revolution number, 
 ;It is called as a procedure in the simultanious fit routine saturn_magnus. This is an old version of Saturn_func that uses a Gaussian function for the shape of the haze instead of deriving the shape of the haze
-;from the slope of the way. This is hence more akin to Gresh et al 1986 model of the Mimas 5:3 BW.
+;from the slope of the way. This is hence more akin to Gresh et al 1986 model of the Mimas 5:3 BW. Not explicitly used for Sega et al 2024 ICARUS, but used to reproduce Gresh et al results.
 
 ;Input
 ;It takes the 7 relevant parameters for the model using a Gaussian function to model the shape of the haze: Amplitud of hump, position of peak of hump
-; standard deviation of hump, the hight of the haze (haze_amp) and the viscosity (v), thickness of ring (d). I also optionally takes the surface density (sigma)
-Plot -> Keyword. Set to 1 and plots are created.
-star -> String with the star name and rev numner (all caps). Example: "GAMPEG036E"
+; standard deviation of hump, ratio between the radii of ring and haze particles (ratiorad) the hight of the haze (haze_amp) and the viscosity (v), thickness of ring (d). I also optionally takes the surface density (sigma)
+;Plot -> Keyword. Set to 1 and plots are created.
+;star -> String with the star name and rev numner (all caps). Example: "GAMPEG036E"
 
 ;Requirements
 ;Magnus directory with all the occultation files (the mean background optical depth for any given geometry goes into the model)
@@ -17,9 +17,13 @@ star -> String with the star name and rev numner (all caps). Example: "GAMPEG036
 ;Output
 ;It returns Chi Square for the simulation
 
+;Exampled
+;IDL>saturn_star, 'GAMPEG032', .5,80,50,1000000,1,0.05,1
+
 
 ;Change Log
 ;7/20/17 -> Created
+;10/28/24-> Updated to run with saturn_robust.sav, phases1.sav and goodfit3.pro. Updated to run with the programs in astrosega Github repository
 
 ;Authors
 ;Daniel Sega
@@ -61,7 +65,7 @@ Pro SATURN_STAR, star, Amp, Peak, Dev, Ratiorad, Haze_amp, v, d, chi, Plot=plot,
   ;Open a file with the data already converted into optical depth (tao), and a radius (radius) vector
   Restore, star_file
  
-  restore, stars_robust.sav
+  restore, 'stars_robust.sav'
   
 
   
@@ -73,10 +77,14 @@ phase = phases[i_geo]
   B = abs(B)
   Beff=abs(atan(tan(B)/cos(phi))) ;this is the effective angle (alpha in Jerousek 2012)
   
+  B = B[i_geo]
+  Beff=Beff[i_geo]
+  phi=phi[i_geo]
+  
   d_nor = d
   res_int = round(1/reso)
   
-  if Beff GT 0.85 then begin ;0.872          ; for occultations of phi GT 47 degrees, the thickness of the ring changes the optical depth very little
+  if Beff[i_geo] GT 0.85 then begin ;0.872          ; for occultations of phi GT 47 degrees, the thickness of the ring changes the optical depth very little
                  d_nor = 1.                  ; (smaller than the noise in the data of AlpVir008E). After this the effect of the thickness in the model is that of
                Res_int = 10.                 ; increasing the resolution (see Gresh 1986 et al., their model has this feature as well), 
          ;Resolution of intercept            ; so we take a computational shortcut and use low resolution (0.001 Km is low for normal occultations)
@@ -85,7 +93,7 @@ endif
   
 
 
-  Hamp  = granolabar3(B,phi)*Sin(B)
+Hamp  =  meantao(radius,tao,tao=1)*Sin(Beff)
   if ~keyword_set(sigma) then sigma = 363.                        ;sigma is the surface mass density in  Kg/m^2 ;Also, this is a best fit for gampeg32
   rv    = 131902.0 ;resonant radius (km)
   
@@ -305,13 +313,10 @@ endif
 
   endif
  
-
-  taosigma[-1] = taosigma[-2]
-  taosigma[0]  = taosigma[1]
  ; print, taosigma
 
 
-  chi = goodfit3(radius, tao, r, optd, points_in_model, taosigma=taosigma)
+ chi = goodfit3(radius, Irr/I0, r, exp(-optd), points_in_model, stars_format, taosigma = Sqrt(Irr)/I0)
   ;print, 'chi_gampeg032 =', chi_gampeg
 
 

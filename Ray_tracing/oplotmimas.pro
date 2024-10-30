@@ -1,8 +1,9 @@
 function oplotmimas, radius, data, nsum = nsum, rebin=rebin, star=star, title=title, Tao=taosum, ANGLES=angles, PHASE=phase, uperror=uperror,downerror=downerror, scl=SCL,layout=layout,modelplot=modelplot,optional=optional,aniso=aniso, joshplot=joshplot
 
+;A plot warpper made to overplot the data to the model's prediction
 ;Takes data(irradiance) and radius and plots optical depth. It is made to overplot over the result of the simulation. 
 ;If you specify Angles and phase it will print the angles of the occultation to the plot. If error is provided, it will plot error bars.
-;If star is provided is places the name of the star on the title of the plot.
+;If star is provided it places the name of the star on the title of the plot.
 
 rv = 131902.0
 
@@ -38,7 +39,7 @@ rv = 131902.0
     
     if Keyword_SET(SCL) then begin
 
-      restore, "scl.sav"
+     ; restore, "scl.sav"
 
      if ~keyword_set(layout) then  newm= plot(rscl-rv, optd, overplot=1,thick=1, color='g', name='SCL Theory',linestyle=5,/current)
       

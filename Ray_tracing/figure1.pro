@@ -191,7 +191,7 @@ pro figure1
   cgplot, rscl-rv, optd,thick=2,xtitle="Position from resonance [km]",ytitle="Optical Depth",background=cgcolor('white'),color=0, xthick=2,ythick=2,charsize=3.5,charthick=2,ymargin=[-.1,-10],position = [.1,.12,.95,.52]
 
   oplot,x, -(120*s)*(x+37),  color=cgcolor('red'),linestyle=5,thick=2
-  oplot,x, -(120*s)*(x+74.5),color=cgcolor('red'),linestyle=5,thick=2
+  oplot,x, -(120*s)*(x+74.4),color=cgcolor('red'),linestyle=5,thick=2
   oplot,x, -(120*s)*(x+105), color=cgcolor('red'),linestyle=5,thick=2
   oplot,x, -(120*s)*(x+138), color=cgcolor('red'),linestyle=5,thick=2
 
