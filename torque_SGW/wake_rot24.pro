@@ -1,7 +1,7 @@
 
 Pro Wake_rot24
-
-;This program computes all the torques specified in Sega el al 2024 and tracks how the self-gravity wake changes the orientation over time
+;Outline
+;This program computes all the torques specified in Sega el al 2024 and tracks how the self-gravity wake changes the orientation over time by a mid-point method of forward propagation of the Eulerian equations of rigid motion
 
 
   flag  = 1 ;to change initial conditions,1 is such that wakes start flat at a trhough. 0 is suh that the wake starts with no omega but inclined as the amplitude of the slope of the wave

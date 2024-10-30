@@ -1,32 +1,9 @@
-;Program that inegrates Hill equations of motion. The goal is to inegrate the trajectories to study the rotational evolution of self-gravity wakes. 
-;
-;This version of wake_rot24.pro is made to run the dynamics in a flat ring and outputs the angle at which the wake settles
 
-;Inputs
-;
-;bs -> vector of impact parameters
-;lc -> length of the long axis of the wake
-;w  -> width of the wake
-;h  -> heigth of the wake
-;s  -> shear rate (1.5 for Keplerian disk)
-;rho ->wake density. Normally rho_roche is used
-;rho_mean-> space density of particles in the ring excluding the SGW
-;x0       -> dot product omega_x' angulare velocity and the radial direction
-;x0                    --> projection of the omega_x vector into the radial direction over time.These set up the current orientation of the wake
- ;y0                    --> projection of the omega_y vector into the radial direction over time.
- ;x2                    --> projection of the omega_x vector into the vertical direction over time.
- ;x1                    --> projection of the omega_x vector into the azimuthal direction over time.
- ;z1                    --> projection of the omega_z vector into the azimuthal direction over time.
- ;z2                    --> projection of the omega_z vector into the vertical direction over time.
- ;omegax                --> angular velocity about the short principal axis of the wake
- ;omegay		--> angular velocity about the long principal axis of the wake
- ;omegaz               --> angular velocity about the vertical principal axis of the wake
- ;ind                   --> (optional) allows to pass the current index of the integration
- ;dhdhot                --> (optional) passes the current time derivative of the wave slope
+;Program that inegrates Hill equations of motion. The goal is to inegrate the trajectories to study the rotational evolution of self-gravity wakes.
 ;
 ;Log:
 ;
-;6/23/2022 -> created
+;3/30/2023 -> created
 ;
 ;
 ;
@@ -41,7 +18,7 @@
 ;  RETURN, [-0.5 * Y[0], 4.0 - 0.3 * Y[1] - 0.1 * Y[0]]
 ;END
 
-function Hillcol4Deq, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0, z1, z2, omegax,omegay,omegaz, ind=ind, phis=phis, oldphi = oldphi, dhdot = dhdot, thetaxs = thetaxs, thetays = thetays, intw=intW, IntH=inth, intl=intl, vzrecord=vzrecord
+function Hillcol4Deq2, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0, z1, z2, omegax,omegay,omegaz, ind=ind, phis=phis, oldphi = oldphi, dhdot = dhdot, thetaxs = thetaxs, thetays = thetays, intw=intW, IntH=inth, intl=intl, vzrecord=vzrecord
   omegax1=omegax
   omegay1=omegay
   omegaz1=omegaz
@@ -114,50 +91,49 @@ function Hillcol4Deq, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0
   time = 2*!dpi/dt
 
 
-  vx = make_array(time+1,n_elements(bs),18, /double)
-  vy = make_array(time+1,n_elements(bs),18,/double)
-  vz = make_array(time+1,n_elements(bs),18,/double)
-  x =  make_array(time+1,n_elements(bs),18,/double)
-  y =  make_array(time+1,n_elements(bs),18,/double)
-  z =  make_array(time+1,n_elements(bs),18,/double)
-  q0 = make_array(time+1,n_elements(bs),18,/double)
-  q1 = make_array(time+1,n_elements(bs),18,/double)
-  v0 = make_array(time+1, n_elements(bs),18,/double)
-  v1 = make_array(time+1, n_elements(bs),18,/double)
+  vx = make_array(time+1,n_elements(bs),9, /double)
+  vy = make_array(time+1,n_elements(bs),9,/double)
+  vz = make_array(time+1,n_elements(bs),9,/double)
+  x =  make_array(time+1,n_elements(bs),9,/double)
+  y =  make_array(time+1,n_elements(bs),9,/double)
+  z =  make_array(time+1,n_elements(bs),9,/double)
+  q0 = make_array(time+1,n_elements(bs),9,/double)
+  q1 = make_array(time+1,n_elements(bs),9,/double)
+  v0 = make_array(time+1, n_elements(bs),9,/double)
+  v1 = make_array(time+1, n_elements(bs),9,/double)
 
   t = findgen(time+2)
   torque = make_array(n_elements(bs))
 
-  gforcex = make_array(n_elements(bs),18)
-  gforcey = make_array(n_elements(bs),18)
-  gforcez = make_array(n_elements(bs),18)
-  q = make_array(n_elements(bs),18)
-  vp = make_array(n_elements(bs),18)
+  gforcex = make_array(n_elements(bs),9)
+  gforcey = make_array(n_elements(bs),9)
+  gforcez = make_array(n_elements(bs),9)
+  q = make_array(n_elements(bs),9)
+  vp = make_array(n_elements(bs),9)
 
   i= 0d
   hit = 0
-  x[0,*,*]  = [bs,bs,bs,bs,bs,bs,bs,bs,bs,bs,bs,bs,bs,bs,bs,bs,bs,bs]
+  x[0,*,*]  = [bs,bs,bs,bs,bs,bs,bs,bs,bs]
   y[0,*,*]  = -30d
+  z[0,*,0]  = .21d
+  z[0,*,1]  = .24d
+  z[0,*,2]  = .27d
+  z[0,*,3]  =  .3d
+  z[0,*,4]  =   .335d
+  z[0,*,5]  =   .36d
+  z[0,*,6]  =   .39d
+  z[0,*,7]  =   .42d
+  z[0,*,8]  =   .45d
   
-  z[0,*,0]  = 0d
-  z[0,*,1]  = .3d
-  z[0,*,2]  = .6d
-  z[0,*,3]  = .9d
-  z[0,*,4]  = .12d
-  z[0,*,5]  =  .15d
-  z[0,*,6]  =   .18d
-  z[0,*,7]  = .21d
-  z[0,*,8]  = .24d
-  z[0,*,9]  = .27d
-  z[0,*,10]  =  .3d
-  z[0,*,11]  =   .33d
-  z[0,*,12]  =   .36d
-  z[0,*,13]  =   .39d
-  z[0,*,14]  =   .42d
-  z[0,*,15]  =   .45d
-  z[0,*,16]  =   .48d
-  z[0,*,17]  =   .51d
-
+;  z[0,*,0]  = .23d
+;  z[0,*,1]  = .26d
+;  z[0,*,2]  = .29d
+;  z[0,*,3]  =  .32d
+;  z[0,*,4]  =   .35d
+;  z[0,*,5]  =   .38d
+;  z[0,*,6]  =   .4d
+;  z[0,*,7]  =   .43d
+;  z[0,*,8]  =   .47d
 
   vx[0,*,*] = 0d
   vy[0,*,*] = -s*x[0,*,*];(3/2)*x[0];+ 3/r
@@ -250,8 +226,8 @@ function Hillcol4Deq, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0
   if phi lt 0 then phi = !dpi + phi
   q0 = (x*x0 + y*x1 + z*x2)*rh
   q1 = (x*y0 + y*y1 + z*y2)*rh
-  ;v0 = (vx*x0 + vy*x1)*rh*omega
-  v0 = (vx*x0 + vy*x1+ vz*x2)*rh*omega
+  v0 = (vx*x0 + vy*x1 + vz*x2)*rh*omega
+  ;v0 = (vx*x0 + vy*x1+ vz*x2)*rh*omega
   v1 = (vx*y0 + vy*y1 + vz*y2)*rh*omega
 
 
@@ -261,7 +237,7 @@ function Hillcol4Deq, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0
   junk =  where_xyz(abs(q1) lt lc/2 and abs(q0) lt w/2., xind=xind, yind=yind,zind=zind, n)
   xind = xind[where(-shift(yind,1) + yind gt 0)]
   yind = yind[where(-shift(yind,1) + yind gt 0)]
- ; zind = zind[where(-shift(yind,1) + yind gt 0)]
+  ;zind = zind[where(-shift(yind,1) + yind gt 0)]
 
 
 
@@ -289,10 +265,11 @@ function Hillcol4Deq, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0
   endif else begin
 
     bs1 = bs[yind,*]*rh
-    findex = where(shift(bs1,-1)-bs1 lt -1,n) 
+    findex = where(shift(bs1,-1)-bs1 lt -1,n)
+    if n eq 0 then findex=n_elements(yind) -1
     bs2 = bs1[0:findex[0]]
-  ;  v0 = v0[*,*,0]
-  ;  q1 = q1[*,*,0]
+    ;v0 = v0[*,*,0]
+    ;q1 = q1[*,*,0]
     v0 = v0[xind[0:findex[0]],yind[0:findex[0]],zind[0:findex[0]]]
     q1 = q1[xind[0:findex[0]],yind[0:findex[0]],zind[0:findex[0]]]
     vzrecord[ind] = mean(abs(vz[xind[0:findex[0]],yind[0],*]))*rh*omega
@@ -311,12 +288,9 @@ function Hillcol4Deq, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0
     z6   = z[*,*,6]*rh
     z7   = z[*,*,7]*rh
     z8   = z[*,*,8]*rh
-    z9   = z[*,*,9]*rh
-    z10   = z[*,*,10]*rh
-
 
     n = n_elements(bs2)
-    zf = make_array(n_elements(bs2),18)
+    zf = make_array(n_elements(bs2),9)
 
 
     zf[*,0]   = z00[xind[0:n-1],yind[0:n-1]]
@@ -328,9 +302,6 @@ function Hillcol4Deq, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0
     zf[*,6]   = z6[xind[0:n-1],yind[0:n-1]]
     zf[*,7]   = z7[xind[0:n-1],yind[0:n-1]]
     zf[*,8]   = z8[xind[0:n-1],yind[0:n-1]]
-    zf[*,9]   = z9[xind[0:n-1],yind[0:n-1]]
-    zf[*,10]   = z10[xind[0:n-1],yind[0:n-1]]
-
 
 
     heff = make_array(n_elements(bs2))
@@ -341,8 +312,8 @@ function Hillcol4Deq, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0
     endfor
     fudge1z = abs([std/2*sqrt(!dpi)/2*erf(x2*W/std + heff*z2/(std/2.)) - std/2*sqrt(!dpi)/2*erf(x2*W/std)  + abs(std/2*sqrt(!dpi)/2*erf(x2*W/std  -heff*z2/(std/2.))) - std/2*sqrt(!dpi)/2*erf(x2*W/std)])
     ;fudge1z = std*sqrt(!dpi)/2*erf(x2*W/std + heff*z2/(std/2.))
-  fudge = Exp(-(q1*y2/(std/2))^2)
-  
+    fudge = Exp(-(q1*tan(tetax)/(std/2))^2)
+
     if ~finite(1/tan(tetax)^4) then tetax =0.001d
     ; torquex =  4*fudge1x*tsum(bs[yind], abs(v0[xind,yind]*(-signum(x2))*(abs(cos(phi)*z0) + abs(sin(phi)*z1)) + (dhdot*y0*z2 - omegax1) * q1[xind,yind]/abs(cos(tetax))) * (v0[xind,yind]*(-signum(x2))*(abs(cos(phi)*z0) + abs(sin(phi)*z1))     + (dhdot*y0*z2 - omegax1) * q1[xind,yind]/abs(cos(tetax))) * rho_mean * fudge * q1[xind,yind]/abs(cos(tetax)))
     ; torquez = -4*tsum(bs2, fudge1z*abs(v0 * signum(z2) + (dhdot*y0*x2 + omegaz1) * q1/abs(cos(tetax))) * (v0* signum(z2)     + (dhdot*y0*x2 + omegaz1) * q1/abs(cos(tetax))) * rho_mean * fudge * q1/abs(cos(tetax)))
@@ -351,10 +322,9 @@ function Hillcol4Deq, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0
 
     ;print,'b',max(bs2[where(q1 gt 0,num)])
     ;print,'n',num
-  ;  print,'fundgez',fudge
   endelse
 
-  q0 = (x*z0 + y*z1 +z*z2)*rh
+  q0 = (x*z0 + y*z1 + z*z2)*rh
   q1 = (x*y0 + y*y1 + z*y2)*rh
   v0 = (vx*z0 + vy*z1 + vz*z2)*rh*omega
   ;v0 = (vx*x0 + vy*x1 +vz*x2)*rh*omega
@@ -364,25 +334,26 @@ function Hillcol4Deq, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0
   xind = xind[where(-shift(yind,1) + yind gt 0)]
   yind = yind[where(-shift(yind,1) + yind gt 0)]
 
+  if n_elements(yind) lt 2 then begin
+    if ~finite(1/tan(tetax)^4) then tetax =0.001d
+    torquex =  4* rho_mean * Abs(-omegax1 + dhdot*y0*z2) * (-omegax1 + dhdot*y0*z2) * fudge1x  * std^2 * (std^2 - Exp(-((l * tan(tetax))/std)^2) * (std^2 + l^2 * tan(tetax)^2))/(32*tan(tetax)^4) ;(l/2)^2
+
+  endif else begin
     if ~finite(1/tan(tetax)^4) then tetax =0.001d
 
     bs1    = bs[yind,*]*rh
     findex = where(shift(bs1,-1)-bs1 lt -1,n)
+    if n eq 0 then findex=n_elements(yind) -1
+
     bs2    = bs1[0:findex[0]]
-    
-    
-    if n_elements(bs2) lt 2 then begin
-      if ~finite(1/tan(tetax)^4) then tetax =0.001d
-      torquex =  4* rho_mean * Abs(-omegax1 + dhdot*y0*z2) * (-omegax1 + dhdot*y0*z2) * fudge1x  * std^2 * (std^2 - Exp(-((l * tan(tetax))/std)^2) * (std^2 + l^2 * tan(tetax)^2))/(32*tan(tetax)^4) ;(l/2)^2
-    endif else begin  
-  
-  ;  v0     = v0[*,*,0]
-  ;  q1     = q1[*,*,0]
-    v0     = v0[xind[0:findex[0]],yind[0:findex[0]],zind[0:findex[0]]]
-    q1     = q1[xind[0:findex[0]],yind[0:findex[0]],zind[0:findex[0]]]
-    
-    
-    fudge = Exp(-(q1*y2/(std/2))^2)
+   ; v0     = v0[*,*,0]
+   ; q1     = q1[*,*,0]
+    v0     = v0[xind[0:findex[0]],yind[0:findex[0]],zind[0:findex[0]]] ;Zind wast here on the one that worked first
+    q1     = q1[xind[0:findex[0]],yind[0:findex[0]],zind[0:findex[0]]] ;Zind wast here on the one that worked first
+
+    fudge = Exp(-(q1*tan(tetax)/(std/2))^2)
+
+
 
     torquex =  4*fudge1x*tsum(bs2, abs(v0*signum(x2)*(-signum(z1)) + (dhdot*y0*z2 - omegax1) * q1) * (v0*signum(x2)*(-signum(z1)) + (dhdot*y0*z2 - omegax1) * q1) * rho_mean * fudge * q1)
 
@@ -391,45 +362,46 @@ function Hillcol4Deq, bs, lc, w, h, s, rho, rho_mean, x0, x1, x2, y0, y1, y2, z0
     ;print, torquez
   endelse
 
-  q0 = (x*z0 + y*z1 +z*z2)*rh
-  q1 = (x*x0 + y*x1 +z*x2)*rh
+  q0 = (x*z0 + y*z1 + z*z2)*rh
+  q1 = (x*x0 + y*x1 + z*x2)*rh
 
   ;q0 = (x*z0 + y*z1)*rh
   ;q1 = (x*x0 + y*x1)*rh
 
-  v0 = (vx*z0 + vy*z1+vz*z2)*rh*omega
-  ;  v0 = (vx*(-z0) + vy*(-z1) -vz*(z2))*rh*omega
-  v1 = (vx*x0 + vy*x1 +vz*x2)*rh*omega
+  v0 = (vx*z0 + vy*z1 + vz*z2)*rh*omega
+  v1 = (vx*x0 + vy*x1 + vz*x2)*rh*omega
 
 
   junk =  where_xyz(abs(q1) lt w/2 and abs(q0) lt h/2,xind=xind, yind=yind, zind=zind, n)
   xind = xind[where(-shift(yind,1) + yind gt 0)]
   yind = yind[where(-shift(yind,1) + yind gt 0)]
-
-  bs1 = bs[yind,*]*rh
-  findex = where(shift(bs1,-1)-bs1 lt -1,n)
-  bs2 = bs1[0:findex[0]]
+  ; zind = zind[where(-shift(yind,1) + yind gt 0)]
 
 
 
-  if n_elements(bs2) lt 2 then begin
+  if n_elements(yind) lt 2 then begin
     if ~finite(1/tan(tetay)^4) then tetay =0.001d
     torquey =  -4 * rho_mean * Abs( omegay1 + dhdot*x0*z2) *  (omegay1 + dhdot*x0*z2) * fudge1y * std^2 * (std^2 - Exp(-(w*tan(tetay)/std)^2) * (std^2 + w^2 * tan(tetay)^2))/(32*tan(tetay)^4)
   endif else begin
-
     if ~finite(1/tan(tetay)^4) then tetay =0.001d
 
     bs1 = bs[yind,*]*rh
-    findex = where(shift(bs1,-1)-bs1 lt -1,n)    
+    findex = where(shift(bs1,-1)-bs1 lt -1,n)
+    if n eq 0 then findex=n_elements(yind) -1
     bs2 = bs1[0:findex[0]]
-  ;  v0 = v0[*,*,0]
-  ;  q1 = q1[*,*,0]
-    v0 = v0[xind[0:findex[0]],yind[0:findex[0]],zind[0:findex[0]]]
-    q1 = q1[xind[0:findex[0]],yind[0:findex[0]],zind[0:findex[0]]]
+ 
+    v0 = v0[xind[0:findex[0]],yind[0:findex[0]],yind[0:findex[0]],zind[0:findex[0]]]
+    q1 = q1[xind[0:findex[0]],yind[0:findex[0]],yind[0:findex[0]],zind[0:findex[0]]]
+
+    fudge = Exp(-(q1*tan(tetax)/(std/2))^2)
+
+    ;v0 = v0[xind[0:findex[0]],yind[0:findex[0]],*]
+    ;q1 = q1[xind[0:findex[0]],yind[0:findex[0]],*]
 
 
 
-    fudge = Exp(-(q1*x2/(std/2))^2)
+
+    fudge = Exp(-(q1*tan(tetay)/(std/2))^2)
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;bs[yind]*rh WASNT THE CASE FOR THE SUBMITTED PAPER. RATHER, just bs[yind]
     torquey =  -4*fudge1y*tsum(bs2, abs(v0*signum(z1)*signum(y2) + (dhdot*x0*z2 + omegay1) * q1) * (v0*signum(z1)*signum(y2) + (dhdot*x0*z2 + omegay1) * q1) * rho_mean * fudge * q1)
 

@@ -2,6 +2,7 @@ pro figure7
 
 ;Purpose
 ;To produce figure 7 in Sega et al 2024. It runs equilibrium_h.pro to compute the equilibrium value for the self-gravity wake pitch angle considering all the torques mentioned in Sega et al 2024. (reduced version of equilibrium_bwpaper.pro)
+;Since equilibitum.h runs something aking to wake_rot24.pro multiple times, this program takes a while to run in 2024 (in the hour range)
 
 ;Requirements (all in the Github directory).
 ;equilibrium_h.pro
