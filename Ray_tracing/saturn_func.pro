@@ -534,27 +534,7 @@ endif
       graphic4.save, stars_format+'.png'
   
     endif
-    
-   if keyword_set(joshplot) then begin
-      optional2   = plot(-x[0:where(x eq 180)], slope*2 + 0.6, xrange=[-200.,50.], yrange=[0.,2.], thick=4, name="Slope",$
-        linestyle=4, dimensions = [1820,720],AXIS_STYLE=1,color='g',layout=[2,1,2],margin=[0, .15, .25, .05],font_size=28, xtitle='Distance from resonance [Km]',ytickformat="(A1)",xtickvalues=[-150,-100,-50,0])
-        
-      optional1   = plot(-x[0:where(x eq 180)], Abs(upper1[0:where(x eq 180)]) + .6, xrange=[-200.,50.], yrange=[0.,2.], thick=4, name="Amplitude",overplot=1,linestyle=5,color='b')
-      a=axis('Y', location=[95,00], tickdir=1,textpos=1,tickvalues=[0,1], target=nop,COORD_TRANSFORM=[0, .6/1], TICKFONT_SIZE=20 ,AXIS_RANGE=[0,3],title='Amplitude [Km]',gridstyle=5,color='b',subgridstyle=5)
-      a=axis('Y', location=[40,0], tickdir=1,textpos=1,tickvalues=[0,0.3], target=nop,COORD_TRANSFORM=[0, .2/1], TICKFONT_SIZE=20 ,AXIS_RANGE=[0,3],title='Slope',gridstyle=3,color='g',subgridstyle=3)
-       graphic  = oplotmimas(radius,data,star='('+stars_format+')',tao=tao, title=1,uperror=taoplus,downerror=taominus,layout=1,modelplot=optional2, optional=optional1);, error=taosigma) ;, angles = [B, phi], phase = phase_print)
-     graphic4   = plot(r-rv, optd, xrange=[-200.,50.], yrange=[0.,2.], thick=4, name="This Work",overplot=1,linestyle=0, dimensions = [1366,768])
-     
-     restore, "../scl.sav"
-     newm= plot(rscl-rv, optd,thick=3, color='g', name='SCL Theory',linestyle=5,overplot=1)
-
-
-      leg  = legend(target = [graphic4,newm, graphic],position=[.23,.93], font_size = 20)
-     ; a=axis('Y', location=[75,0], tickdir=1,textpos=1,tickvalues=[0,1], target=nop,COORD_TRANSFORM=[0, .6/1], TICKFONT_SIZE=18 ,AXIS_RANGE=[0,3],title='Amplitude [Km]',gridstyle=5,color='b',subgridstyle=5)
-     ; a=axis('Y', location=[50,0], tickdir=1,textpos=1,tickvalues=[0,0.3], target=nop,COORD_TRANSFORM=[0, .2/1], TICKFONT_SIZE=18 ,AXIS_RANGE=[0,3],title='Slope',gridstyle=3,color='g',subgridstyle=3)
-      graphic4.save, stars_format+'.png'
-    endif
-      chi = goodfit3(radius, Irr/I0, r, exp(-optd), points_in_model, stars_format, taosigma = Sqrt(Irr)/I0)
+          chi = goodfit3(radius, Irr/I0, r, exp(-optd), points_in_model, stars_format, taosigma = Sqrt(Irr)/I0)
 
 chis[star_i] = chi
 ;print, stars[star_i],chi
