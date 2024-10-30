@@ -50,7 +50,7 @@ pro haze_creation, phi, theta, omega, i, sigma, nhits, epsilon, x, upper, slope,
   if keyword_set(landr) and nhits gt 1 then begin
     mu2 = mu ;+ epsilon*(k[i] * sqrt(slope[i]) * s+ w)*1/sqrt(2)
     B = [[cos(phi), sin(phi)],[-mu2*sin(phi), mu2*cos(phi)]]
-    R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*(sqrt(slope[i])*s+ w)];*1/sqrt(2)]
+    R = [A*damp[i]*cos(phi), -omega[0]*A*damp[i]*sin(phi) + epsilon*(sqrt(slope[i])*s+ w)*1];/sqrt(2)]
 
     C[* , 1] = Invert(B) ## R     ; I verified this is the right operator for this order of opertations
     nhits = 1

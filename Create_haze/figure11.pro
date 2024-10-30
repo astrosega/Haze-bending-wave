@@ -11,7 +11,8 @@ pro figure11
 ;
 ;Date created 09-09-2022
 
-epsilon = .5
+
+;;;;;Constants;;;;;;
 
   G  = 6.67408e-11      ;SI
   cD = 1.50217913e-7    ;this is the curly D in SCL, (1/s^2)
@@ -27,31 +28,30 @@ epsilon = .5
   J2 = 16290.71e-6;
   M = 5.6834e26;
   R = 60330000;
-
   omegaM = 0.0000771634
   muM    = 0.000077365
 
-  ; omegap = ((G*M/rv^3) (1 + (J2)*(3/2)*(R/rv)^2 - (J4) (15/8)*(R/rv)^4))^.5
+  epsilon = .5         ;coefficient of resitution
 
-
-  phis = linspace(0,2*!dpi,6)
+  phis = linspace(0,2*!dpi,6) ;this corresponds to the phases (in a vertical period of a self-gravity wake) in which the collision happen (for instance, a collision at a phase of 0 occurs when the wave is flat and the elevation is maximum). We model six collisions per period.
   sigma  =  363
   Hsigma = (sigma/1000.)
   A      = (476.92d/(Sqrt(Hsigma)))/1000d
 
   j=complex(0,1)
-  ;initialize your variable array. Yes we have to do it again because each occ is optimized for a particular t-vector
+  
+  ;initialize your radial axis.
 
-  reso  =   0.001 ;km ;This is the resolution of the x axis, not of the ray-tracing
+  reso  =   0.001 ;km ;This is the resolution of the x axis.
   km    = 300
   start = -21
   x     = dindgen(round(km*(1/reso)), Increment=reso, start=start) ;radial axis, in Km. t=0 at resonance
   i = -start/reso + 100/reso
  
   
-  S       = .000025
+  s       = .000025 ;constant 'a' in Sega et al 2024. ICARUS
 
-  omega = 4*((G*M/((rv-x[i])*1000)^3)*(1 + J2*(3./2.)*(R/((rv-x[i])*1000))^2 - J4*(15./8.)*(R/((rv-x[i])*1000))^4))^.5 - 4*OmegaM - muM
+  omega = 4*((G*M/((rv-x[i])*1000)^3)*(1 + J2*(3./2.)*(R/((rv-x[i])*1000))^2 - J4*(15./8.)*(R/((rv-x[i])*1000))^4))^.5 - 4*OmegaM - muM ;This is the vertical driven frequency.
 
 
 
@@ -78,7 +78,7 @@ epsilon = .5
 
 
 
-  theta = linspace(0, 3*!dpi)
+  theta = linspace(0, 3*!dpi) ;This corrrespoinds to for how many periods are the collisions computed
 
   !p.multi = [0,0,0]
 
@@ -99,72 +99,23 @@ epsilon = .5
   endforeach
   tic
 
+
   indi = 0
 
 
 
-  phis = linspace(0,2*!dpi,12)
-  sigma  =  363.
-  Hsigma = (sigma/1000.)
-  A      = (476.92/(Sqrt(Hsigma)))/1000.
-  j=complex(0,1)
-  ;initialize your variable array. Yes we have to do it again because each occ is optimized for a particular t-vector
+  phis = linspace(0,2*!dpi,12)  ; see other definition of phis above
+  fase = 1.5                    ;phase of the wave modeled
 
-  reso  =   0.001 ;km ;This is the resolution of the x axis, not of the ray-tracing
-  km    = 300
-  start = -21
-  x     = dindgen(round(km*(1/reso)), Increment=reso, start=start) ;radial axis, in Km. t=0 at resonance
-
-  ; ri = 1d
-  ;rf = 150d
   ri = double(start) +.5
   rf = double(km + start)
 
 
   res = .4d
 
-  rad = make_array((rf - ri)/res + 1)
-  zmax = make_array((rf - ri)/res+ 1)
-  zmin = make_array((rf - ri)/res+ 1)
-
-  d     = .015; d is the vertical thinckness of the ring in Km
-  v     = .05 ;viscosity (m^2/s)
-  sigma = 363.
-  dampingfactor = (1./3.)*(cD^2)*mu/(2*!Dpi*G*sigma)^3             ;this is in SI (meters. remember t and rv are in km)
-  damp          =  Exp(-((x^3/rv^2)*1000.*(dampingfactor)*(v)))    ;the 1000 is to transform x into meters since the viscosity is in meters
-
-  Hsigma=(sigma/1000.)
-
-
-  A=(476.92/(Sqrt(Hsigma)))/1000. ;amplitude of the wave
-
-  ;The 476.92 is calculated by estimating the amplitude of the driving force (MIMAS g field). It depends on the driving frequency and
-  ;natural frequency as well as some parameters of MIMAS orbit. This value is computed in SCL. A is in Kilometers. Note that in Gresh et al.
-  ;(Radio occultations) the best fitted amplitude differed by this one by a factor of 4 while in SCL (optical) it differed by 1.15
-
-
-  ;e is a parameter that appears in the solution of the DE and makes the exponent, which is part of the solution, dimensionless. It is related to the wave
-  ;number of the bending wave and it depends on G, sigma, and the difference in the driving and natural frequencies. It also depends on the distance
-  ;from saturn at resonance. This value of e was calculated by me using the Keplerian approximation (vertical frequency=orbital frequency).
-  ; e is defined in SCL
-  
-  e=(2.*!DPI*G*sigma/(rv*1000d*cD)) ;the 1000 is to transform rv into m
-
-  ;Here comes the wave profile at maximum amplitude at resonance (this sets the phase to -Pi/4). The sqrt of pi in the amplitude comess from the fresnel integral, don't panick.
-  ;it is not part of the amplitude
-  fase = 1.5
-  upper = (rv/(rv+x))^0.5 * (A/(sqrt(!DPI))) * exp(j*(fase + !dpi/4.)) * damp * (Exp(j*x^2/(2*e*rv*rv))*(0.5*sqrt(!DPI/2)-0.5*j*sqrt(!DPI/2) + fresnel_complex(x/(sqrt(2*e)*rv))))
-
-  slope     = -(shift(upper, 1) - upper)/reso
-  slope[0]  = 0
-
-  s = .0000242d
-  ;nhits = 3
-  ;slope1 = -(shift(slope, 1) - slope)/reso
-  slope=abs(slope)
-
-  Amp = Abs(upper)
-  k = slope/amp
+  rad = make_array((rf - ri)/res + 1) ;Creates array to record the haze envelop
+  zmax = make_array((rf - ri)/res+ 1) ;This will record the position of the highest haze particle
+  zmin = make_array((rf - ri)/res+ 1) ;This will record the position of the lowest haze particle
 
 
   for ind = ri, rf, res do begin ;This loop goes to all the considered radial location between ri and rf and computes the results of the collision there.
@@ -225,8 +176,8 @@ epsilon = .5
 
   a=max(zmax(where(rad gt 40)),i)
   b=min(zmin(where(rad gt 40)),j)
-  junk = min(abs(rad - 10),i)
-  junk = min(abs(rad - 140),j)
+  junk = min(abs(rad - 25),i)
+  junk = min(abs(rad - 125),j)
   
  
 
@@ -234,9 +185,9 @@ epsilon = .5
 
   print,'maximum thickness of the haze [km] =', max(zmax-zmin) ;For epsilon=0,1 I get 0.052 km. For epsilon = 1, 0.32 km. For epsilon=0,5 I get 0.164713 km
   print,'minimum thickness of the haze [km] within the wave =', min(zmax[i:j]-zmin[i:j],k) ;For epsilon=0.5 I get 0.0704 km.
-  rad2 =rad[i:j] 
-  print,rad2[k]
-  PLOT,rad,(zmax-zmin)
+ ; rad2 =rad[i:j] 
+ ; print,rad2[k]
+ ; PLOT,rad,(zmax-zmin)
   der = ((shift(zmax,-1)-zmax)/(rad[10]-rad[11]))
   print, 'maximum slope of the haze =',max(abs(der[0:-2]))
 
