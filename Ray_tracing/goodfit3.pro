@@ -15,8 +15,7 @@
 
 ;Change Log:
 
-;10/ 8 / 2016 -> changed differencia from the absolute value of the difference to the square of the difference,
-;then I changed it back
+;10/ 8 / 2016 -> changed differencia from the absolute value of the difference to the square of the difference
 
 function goodfit3,  radius, tao, r, optd, points_in_model, star, Taosigma=taosigma
 
