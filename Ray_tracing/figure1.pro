@@ -71,7 +71,7 @@ pro figure1
   d=0.015; d is the vertical thinckness of the ring in Km
 
   stars_format = stars
-  star_file = file_search(filepath(stars_format+ '*', subdir = ['magnus']))
+  star_file = file_search(filepath(stars_format+ '*', root_dir = ['magnus']))
 
   ;print,star_file
 
