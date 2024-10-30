@@ -1,7 +1,16 @@
 pro figure7
 
 ;Purpose
-;To produce figure 7 in Sega et al 2024. It runs equilibrium_h.pro to compute the equilibrium value for the self-gravity wake pitch angle considering all the torques mentioned in Sega et al 2024.
+;To produce figure 7 in Sega et al 2024. It runs equilibrium_h.pro to compute the equilibrium value for the self-gravity wake pitch angle considering all the torques mentioned in Sega et al 2024. (reduced version of equilibrium_bwpaper.pro)
+
+;Requirements (all in the Github directory).
+;equilibrium_h.pro
+;tsum.pro
+;linspace.pro
+;HILLCOL4DEQ2.pro
+;TSUM.pro
+;WHERE_XYZ.pro
+
 
   Mm = 3.7493e19
   Ms = 5.6e26
@@ -102,15 +111,6 @@ pro figure7
   num=.8
 
   foreach epsilon, epsilons do begin
-    ; bmax= Sqrt((1/16 * L^2 * Sin(x)^2) + ((4 * 2^(1/3) * GM * (L + L * Cos(x))) / (27d * L^2 * s^4 * GM * omega^4 * (L + L * Cos(x)) * Sin(x)^2 +$
-    ;    Sqrt(55296 * s^6 * GM^3 * omega^6 * (L + L * Cos(x))^3 + 729 * L^4 * s^8 * GM^2 * omega^8 * (L + L * Cos(x))^2 * Sin(x)^4))^(1/3) - (27 * L^2 * s^4 * GM * omega^4 * (L + L * Cos(x)) * Sin(x)^2 + $
-    ;    Sqrt(55296 * s^6 * GM^3 * omega^6 * (L + L * Cos(x))^3 + 729 * L^4 * s^8 * GM^2 * omega^8 * (L + L * Cos(x))^2 * Sin(x)^4))^(1/3)) / (6 * 2^(1/3) * s^2 * omega^2))
-
-    ;   A= (27 * L^2 * s^4 * GM * omega^4 * (L + L * Cos(x)) * Sin(x)^2 + $
-    ;    Sqrt(55296 * s^6 * GM^3 * omega^6 * (L + L * Cos(x))^3 + 729 * L^4 * s^8 * GM^2 * omega^8 * (L + L * Cos(x))^2 * Sin(x)^4))^(1/3)) / (6 * 2^(1/3) * s^2 * omega^2))
-    ;   C=((4 * 2^(1/3) * GM * (L + L * Cos(x))) / (27d * L^2 * s^4 * GM * omega^4 * (L + L * Cos(x)) * Sin(x)^2 +$
-    ;    Sqrt(55296 * s^6 * GM^3 * omega^6 * (L + L * Cos(x))^3 + 729 * L^4 * s^8 * GM^2 * omega^8 * (L + L * Cos(x))^2 * Sin(x)^4))^(1/3)
-    ;  D=0.25*L*sin(x)
 
     COMMON SHAREs, s
     COMMON SHARErho, rho_mean
@@ -164,37 +164,14 @@ pro figure7
       f1=2*G*Ms/(rv^3)*cos(x)*sin(x)*(l/2)^3*rho *H*W
       f2=2*(1+epsilon)*GM*H*rho_mean*(bmax*(1 + cos(x)) + sin(x)*(s*omega)^2/(4*GM)*(bmax)^4)
 
-      func = Lambda(x: abs(kep(x)-tidal(x)))
-      ;root = FX_ROOT([x[i]+.1,x[i],x[i]-.1], func,tol=100.,double=1)
-      ;root = FX_ROOT([.9,.8,.7], func,tol=1e-3,double=1)
       root = equilibrium_h(s,rho_mean,l,h,w,omega,phi=x[i])
       print,root*180/!dpi
-      ;print,'diference',abs(kep(root)-tidal(root))
 
-
-      ; print,root
-
-      ; junk[(s/ds)] = min(abs(2*G*Ms/(rv^3)*cos(x)*sin(x)*(l/2)^3*rho *H*W - 2*(1+epsilon)*GM*H*rho_mean*(bmax*(1 + cos(x)) + sin(x)*(s*omega)^2/(4*GM)*(bmax)^4)) , i)
-
-      ; print,junk
       thetas[(s/ds),j] = root
       thetasDDA[(s/ds),j] = x[i]
 
       ss[(s/ds)] = s
 
-
-
-      ;plot,2*G*Ms/(rv^3)*cos(x)*sin(x)*(l/2)^3*rho *H*W
-      ;oplot,2*(1+epsilon)*GM*H*rho_mean*(bmax*(1 + cos(x)) + sin(x)*(s*omega)^2/(4*GM)*(bmax)^4d),color=1000
-
-      ;      if s gt 1.46 then begin
-      ;  print,'f1= ',f1[20]
-      ; print,'f2= ',f2[20]
-      ; print,'x= ',x[i]
-      ; print,'root= ',root
-      ; print,'stop'
-
-      ;     endif
 
     endfor
     j = j + 1
@@ -202,51 +179,6 @@ pro figure7
 
   endforeach
 
-  ; !p.multi = [1,1,1]
-
-  ;WINDOW, 0, XSIZE=1366, YSIZE=768, TITLE='Haze'
-
-  ;restore, 'eqVW.sav'
-  wi,2, wsize = [1366, 768]
-
-  cgplot,ss,thetas[*,0]*180/!dpi, yrange =[0,90],ytitle='Pitch-angle (!4h!X)',xtitle='Shear rate (!4C!X)', background = cgcolor('white'),charsize=2.5,xthick=2.4,ythick=2,thick=2
-
-  ;cgoplot,ss,64.35+2.87 - ss*(36.62-5.53), yrange =[0,90],color=cgcolor('red'),linestyle = 0,thick=1
-  ;cgoplot,ss,64.35-2.87 - ss*(36.62+5.53), yrange =[0,90],color=cgcolor('red'),linestyle = 0,thick=1
-  cgoplot,ss,64.35 - ss*36.62, yrange =[0,90],color=cgcolor('red'),linestyle = 2,thick=2
-
-  cgoplot,ss,atan(2./7 * sqrt(4-2*ss)/ss)*180/!dpi, yrange =[0,90],color=cgcolor('blue'),linestyle = 2,thick = 2
-  ;  cgoplot,ss,  atan(1.932-5.186*.5*ss+4.704*(.5*ss)^2)*180/!dpi, yrange =[0,90],color=cgcolor('green')
-  cgoplot,[1.5],[23.5], yrange =[0,90],psym=4,symsize=2,err_yhigh=2,err_ylow=2
-  cgoplot,[1.5,1,.5],[25,34,48], yrange =[0,90],psym=5,symsize=2,color=cgcolor('Black')
-  ;cgoplot,[1.5,1,.5],[25.4,37,47.5], yrange =[0,90],psym=5,symsize=2,color=cgcolor('magenta')
-
-
-  cgLegend, Color=['Blue','Red','Black','White','White'],Symcolor=['Blue','Red', 'Green','Black','Black'], Psym=[3,3,3,4,5], linestyle=[2,2,0,0,0], Location=[0.3, 0.8],  Titles=['Michikoshi & Kokubo 2014 (Galactic/Simulations)','Seigar et al. 2006 (Galactic/Observations)', 'This Work','Jerousek+ 2016 (Cassini occultations)','Salo+ 2018 (Numerical simulations)'], Length=0.075, /Box, VSpace=2.75,/Background, bg_color='white',charsize=2.2,symsize=2
-
-  if n_elements(epsilons) gt 2 then cgplot,epsilons,thetas[where(ss eq 1.5),*]*180/!dpi, yrange =[0,90],xtitle='Coefficient of rerstitution',ytitle='!4h!X', background = cgcolor('white'),charsize=2.5
-
-  wi,3, wsize = [1366, 768]
-  cgplot,ss,thetasDDA[*,0]*180/!dpi, yrange =[0,90],ytitle='Pitch-angle (!4h!X)',xtitle='Shear rate (!4C!X)', background = cgcolor('white'),charsize=2.5,xthick=2,ythick=2,thick=2,title='DDA'
-
-  ;cgoplot,ss,64.35+2.87 - ss*(36.62-5.53), yrange =[0,90],color=cgcolor('red'),linestyle = 0,thick=1
-  ;cgoplot,ss,64.35-2.87 - ss*(36.62+5.53), yrange =[0,90],color=cgcolor('red'),linestyle = 0,thick=1
-  cgoplot,ss,64.35 - ss*36.62, yrange =[0,90],color=cgcolor('red'),linestyle = 2,thick=2
-
-  cgoplot,ss,atan(2./7 * sqrt(4-2*ss)/ss)*180/!dpi, yrange =[0,90],color=cgcolor('blue'),linestyle = 2,thick = 2
-  ;  cgoplot,ss,  atan(1.932-5.186*.5*ss+4.704*(.5*ss)^2)*180/!dpi, yrange =[0,90],color=cgcolor('green')
-  cgoplot,[1.5],[23.5], yrange =[0,90],psym=4,symsize=2,err_yhigh=2,err_ylow=2
-  cgoplot,[1.5,1,.5],[25,34,48], yrange =[0,90],psym=5,symsize=2,color=cgcolor('Black')
-
-  cgLegend, Color=['Blue','Red','Black','White','White'],Symcolor=['Blue','Red', 'Green','Black','Black'], Psym=[3,3,3,4,5], linestyle=[2,2,0,0,0], Location=[0.3, 0.8],  Titles=['Michikoshi & Kokubo 2014 (Galactic/Simulations)','Seigar et al. 2006 (Galactic/Observations)', 'This Work','Jerousek+ 2016 (Cassini occultations)','Salo+ 2018 (Numerical simulations)'], Length=0.075, /Box, VSpace=2.75,/Background, bg_color='white',charsize=2.2,symsize=2
-
-
-  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ;restore, 'eqHill.sav'
-  ;save, thetas, ss, thetasDDA,filename='eqVW.sav'
-  restore,'eqVW.sav'
-
-  thisletter="161B
 
   wi,3, wsize = [1266, 900]
   cgplot,ss[0:-8],thetas[0:-8]*180/!dpi, yrange =[20,52],ytitle='Pitch-angle (!9' + string(thisletter) +'!X$\downw$) [degrees]',xtitle='Shear rate (!18q!X) [-]', background = cgcolor('white'),charsize=3.8,xthick=2.4,ythick=2,thick=3,xrange=[0,1.6],font=1

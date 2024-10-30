@@ -26,7 +26,7 @@ Pro nwpl232dt97, seconds, omega, thetaxs, thetays, phis, deltav, deltavk, vkdr, 
   ;x1s                    --> projection of the omega_x vector into the azimuthal direction over time.
   ;z1s                    --> projection of the omega_z vector into the azimuthal direction over time.
   ;z2s                    --> projection of the omega_z vector into the vertical direction over time.
-  ;dhdot                  --> local slope of the wave over time.
+  ;dhdot                  --> time derivative of the local slope of the wave over time.
   
   ;Change log
   ;08-19-2022  --> created by Daniel Sega

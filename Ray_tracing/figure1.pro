@@ -1,5 +1,5 @@
 ;Outline
-;A version of saturn_star that is written to generate Figure 1 from Sega et al 2024. with minimum setup requirements. It demostrates the geometry and optics of an UVIS occultation
+;A version of saturn_star that is written to generate Figure 1 from Sega et al 2024. with minimum setup requirements. It demostrates the geometry and optics of an UVIS occultation. It looks for the files and the magnus folder int he root directory iof your IDL instance
 ;
 ;Requirements
 ;
@@ -8,6 +8,11 @@
 ;Fresnel_complex.pro -> (in the root of the repositorty). Computes the complex fresnel integral nescessary to draw the SCL wave.
 ;oplotmimas.pro      -> In this directory. Plot warper.
 ;func_shugampeg.pro  -> in this directory,
+;meantao.pro         -> in this directory,
+;wi.pro              -> in this directory
+;findradius.pro      -> in this directory,
+;al_legend.pro       -> in this directory,
+;
 ;The Coyote library
 ;
 ;Authors

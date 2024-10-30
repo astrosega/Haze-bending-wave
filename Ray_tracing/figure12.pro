@@ -1,6 +1,16 @@
 ;Outline
-;Used to plot Figure 12 Sega et al 2024. It is a specfici version of the saturn_func.pro program that simulates a GamPeg032 occultation both for the haze and SCL models. It calls on func_shugampeg.pro, stars_robust.sav and
-;phases1.sav (which is a table for the oberved phases of the wave for each occulation) and the "magnus" directory.
+;Used to plot Figure 12 Sega et al 2024. It is a specfici version of the saturn_func.pro program that simulates a GamPeg032 occultation both for the haze and SCL models. 
+;
+;Requirements
+;It calls on func_shugampeg.pro, 
+;stars_robust.sav (set to look for it in the root directory for your idl instance) and
+;phases1.sav (which is a table for the oberved phases of the wave for each occulation) (set to look for it in the root directory for your idl instance)
+;goodfit3,pro   --> in this directory
+;oplotmimas.pro --> in this directory
+;haze_func.pro --> in the Create_haze directory
+;linspace.pro  --> in the root of the main branch it github
+;tsum.pro       --> ''
+;and the "magnus" directory.(set to look for it in the root directory for your idl instance)
 
 ;Authors
 ;Daniel Sega

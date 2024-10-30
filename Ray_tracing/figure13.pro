@@ -1,6 +1,18 @@
 ;Outline
 ;A version of saturn_star that is written to plot 6 other occultations of different geometries. The geometries correspond with the subsets of the UVIS dataser derfined in Sega 2024. The raytracing for all the geometries is done in the code. Calls on stars_robust.sav and 
 ;phases1.sav (which is a table for the oberved phases of the wave for each occulation) and the "magnus" directory.
+;
+;;Requirements
+;It calls on func_shugampeg.pro,
+;stars_robust.sav (set to look for it in the root directory for your idl instance) and
+;phases1.sav (which is a table for the oberved phases of the wave for each occulation) (set to look for it in the root directory for your idl instance)
+;goodfit3,pro   --> in this directory
+;oplotmimas_fig13.pro --> in this directory
+;haze_func.pro --> in the Create_haze directory
+;linspace.pro  --> in the root of the main branch it github
+;tsum.pro       --> ''
+;and the "magnus" directory.(set to look for it in the root directory for your idl instance)
+;
 ;Log.
 ;Jan 2024 -> Created. Daniel Sega
 

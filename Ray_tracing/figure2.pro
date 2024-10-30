@@ -7,6 +7,11 @@
 ;GamPeg032I_Mimas53BW_400m_res.sav   ---- the occultation to be simulated binned to 400m of radial resolution. These and all the other stellar occultation files used are under a folder named "magnus" in the GitHub repository
 ;Fresnel_complex.pro -> (in the root of the repositorty). Computes the complex fresnel integral nescessary to draw the SCL wave.
 ;oplotmimas_fig212.pro      -> In this directory. Plot warper.
+;meantao.pro         -> in this directory,
+;wi.pro              -> in this directory
+;findradius.pro      -> in this directory,
+;al_legend.pro       -> in this directory,
+;mimas53.pro         ->   ""
 
 ;Purpose
 ;To produce Figure 2 in Sega et al 2024 ICARUS.
@@ -570,15 +575,9 @@ pro Figure2
       ; a=axis('Y', location=[50,0], tickdir=1,textpos=1,tickvalues=[0,0.3], target=nop,COORD_TRANSFORM=[0, .2/1], TICKFONT_SIZE=18 ,AXIS_RANGE=[0,3],title='Slope',gridstyle=3,color='g',subgridstyle=3)
       graphic4.save, stars_format+'.png'
     endif
-    chi = goodfit3(radius, Irr/I0, r, exp(-optd), points_in_model, stars_format, taosigma = Sqrt(Irr)/I0)
 
-    chis[star_i] = chi
     ;print, stars[star_i],chi
   endfor
 
-  Chi_Total = total(chis)
-  print,beta, chi_total/(498.*59. + 497), keyword_set(fit_phase), keyword_set(isotro),epsilon
-
-  ;toc
 
 end

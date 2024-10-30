@@ -97,7 +97,7 @@ Function func_ShuGampeg, normal=normal
 
     stars_format = stars[star_i]
 
-    star_file = file_search(filepath(stars_format+ '*', subdir = ['magnus']))
+    star_file = file_search(filepath(stars_format+ '*', root_dir = ['magnus']))
 
     Restore, star_file
 

@@ -7,6 +7,9 @@
 ;calls the "magnus" directory
 ;Fresnel_complex.pro -> (in the root of the repositorty). Computes the complex fresnel integral nescessary to draw the SCL wave.
 ;func_shugampeg.pro  -> in this directory,
+;;meantao.pro         -> in this directory,
+;wi.pro              -> in this directory
+;findradius.pro      -> in this directory,
 ;
 
 
@@ -36,20 +39,6 @@ Pro Figure3
   restore, 'stars_robust.sav' ;this is the list of occultations
   if keyword_set(highb) then restore, 'stars_robust.sav'
 
-  ;stars= stars[-20:-1]
-  ;B    = B[-20:-1]
-  ;phi= phi[-20:-1]
-  ;  lon_mimas = lon_mimas[-20:-1]
-  ;  up_down = up_down[-20:-1]
-  ; z_mimas = z_mimas[-20:-1]
-
-  ;stars= stars[3:-1]
-  ;B    = B[3:-1]
-  ;phi= phi[3:-1]
-  ;  lon_mimas = lon_mimas[3:-1]
-  ;  up_down = up_down[3:-1]
-  ;  z_mimas = z_mimas[3:-1]
-
 
   noccs = n_elements(stars)
   chis  = fltarr(noccs) ; this is an array to store the chi squared for each occultation
@@ -78,7 +67,7 @@ Pro Figure3
   theory = make_array(noccs)
 
 
-  for star_i=0, noccs-1 do begin
+   star_i=0
 
     beta =  p0[0]
     y_add = 0
@@ -122,22 +111,6 @@ Pro Figure3
     ;Open a file with the data already converted into optical depth (tao), and a radius (radius) vector
     Restore, star_file
 
-    ;I'm reading off the parameter of Mimia's orbit
-    ;Restore, Filepath('Mimas_lon_z_danielOX.sav', subdir = ['Mimas_data'])
-    ; Restore, 'Mimas_lon_z_danielOX.sav'
-    ;  Restore, 'mimascoor.sav'
-
-    ;I'm reading off the geometry of the occultation
-    ; ;Restore, 'geometries.sav'
-    ;Restore, 'geometry.sav'
-
-
-    ;Finally, I'm reading off the value for the normal optical depth of the hump according to the granola bar model (Jerousek 2016)
-    ;  Restore, 'granola_haze.sav'
-
-    ;  i_geo  = where(stars[star_i] EQ rev)
-    ; i_mimas= i_geo + 1
-
     i_geo  = star_i
     i_mimas= star_i
 
@@ -153,96 +126,23 @@ Pro Figure3
 
     ;  B[i_geo] = abs(b[i_geo])
     if B[i_geo[0]] LT 0 then begin
-      ;    up_down[i_mimas] = -1*up_down[i_mimas]
-      ;   z_mimas[i_mimas] = -z_mimas[i_mimas]
-      ; lon_mimas[i_mimas] = -lon_mimas[i_mimas]
-      ;   flip1 = !dpi
-      ;   B[i_geo[0]] = abs(b[i_geo[0]])
-      ; lon_mimas[i_mimas] = lon_mimas[i_mimas] * (-1)
-      ; flip1 = !dpi
-      ;      vuelta = 1
-      ;if ((phi[i_geo[0]] LE 90) OR ((phi[i_geo[0]] LE 360 AND phi[i_geo[0]] GE 270)))  then begin
-      ;             strings = stars[star_i]
-      ;      if strmatch(strings.Substring(-1),'E') then flip2 = !dpi
       if (phi[i_geo[0]] LE 270 and phi[i_geo[0]] GE 90) then begin
-        ; print,  stars[star_i]
         flip1 = !dpi
       endif
-      ;  endif
-      ;  if (phi[i_geo[0]] GT 180) then up_down[i_mimas] = -1*up_down[i_mimas]
-      ;   if (phi[i_geo[0]] LE 270 AND phi[i_geo[0]] GE 90) then up_down[i_mimas] = -1*up_down[i_mimas]
-
     endif
 
     if  B[i_geo[0]] gT 0 then begin
-      ; if (phi[i_geo[0]] gt 175) then flip2 = !dpi
-      ;      lon_mimas[i_mimas] = -lon_mimas[i_mimas]
-      ;strings = stars[star_i]
-      ;   if strmatch(strings.Substring(-1), 'E') then flip2 = !dpi
-      ;if ((phi[i_geo[0]] LE 90) OR ((phi[i_geo[0]] LE 360 AND phi[i_geo[0]] GE 270))) then  begin
-      ; if star is the in the south, then antiradial works but radial needs to be corrected
-      ;        if ((phi[i_geo[0]] LE 90) OR phi[i_geo[0]] GE 270)  then begin
       if (phi[i_geo[0]] gE 270 or phi[i_geo[0]] lE 90) then begin
         flip1 = !dpi
-
-        ;  if (phi[i_geo[0]] LE 270 AND phi[i_geo[0]] GE 90) then flip1 = !dpi
-        ; up_down[i_mimas] = -1*up_down[i_mimas]
-        ;z_mimas[i_mimas] = -z_mimas[i_mimas]
       endif
 
-      ; if (phi[i_geo[0]] lt 180) then lon_mimas[i_mimas] = -lon_mimas[i_mimas]
-
-
-      ;phi[i_geo] = phi[i_geo] ;+ !dpi
     endif
-
-    if stars[star_i] eq 'SigSgr114I' then begin
-      ;  lon_mimas[i_mimas] = -lon_mimas[i_mimas]
-      ; z_mimas[i_mimas] = -z_mimas[i_mimas]
-      ;  up_down[i_mimas] = -1*up_down[i_mimas]
-      ;  flip2 = !dpi
-    endif
-
-    ;if stars[star_i] eq 'KapCMa168E' then begin
-    ;flip2 = !dpi
-    ;  lon_mimas[i_mimas] = -lon_mimas[i_mimas]
-    ;  z_mimas[i_mimas] = -z_mimas[i_mimas]
-    ; up_down[i_mimas] = -1*up_down[i_mimas];
-    ; flip2 = !dpi
-    ;endif
-
-    ;if stars[star_i] eq 'AlpVir008I'  then begin
-    ;   up_down[i_mimas] = -1*up_down[i_mimas]
-    ;   flip2 = !dpi
-    ; lon_mimas[i_mimas] = -lon_mimas[i_mimas]
-    ; z_mimas[i_mimas] = -z_mimas[i_mimas]
-    ; up_down[i_mimas] = -1*up_down[i_mimas]
-    ; endif
-
-    ; if stars[star_i] eq 'BetCMa211I' then begin
-    ; lon_mimas[i_mimas] = -lon_mimas[i_mimas]
-    ;z_mimas[i_mimas] = -z_mimas[i_mimas]
-    ;up_down[i_mimas] = -1*up_down[i_mimas]
-    ;flip2=!dpi
-    ; endif
-
-    ;if stars[star_i] eq 'KapCMa168I' then begin
-    ; flip2 = !dpibuf
-    ;lon_mimas[i_mimas] = -lon_mimas[i_mimas]
-    ;z_mimas[i_mimas] = -z_mimas[i_mimas]
-    ;up_down[i_mimas] = -1*up_down[i_mimas];
-    ; endif
-
-
-
 
     B   = ( B[i_geo] /  180d)   *(!Dpi)
     phi = (phi[i_geo]/  180d) * (!Dpi)
 
     B   = B[0]
     phi = phi[0]
-
-
 
     ;For some occs on this catalog of geometries, B is given in a negative number, which means the ring is fliped upsidedown
     ;for the values used to recreate that occultation. Because of how the code is written, we rather not change the B angle but
@@ -267,13 +167,6 @@ Pro Figure3
     while (phase LT 0) do begin
       phase = phase + 2*!dpi
     endwhile
-    ;  print,phase_print
-    ;  print,phase
-    ;  phase_print = phase_print*180/!dpi
-
-    ;  print,'phase =',phase_print, '   star = ', stars[star_i], '  phi = ', phi*180/!dpi
-
-
     B = abs(B)
     Beff=abs(atan(tan(B)/cos(phi))) ;this is the effective angle (alpha in Jerousek 2012)
 
@@ -725,30 +618,5 @@ Pro Figure3
       ; a=axis('Y', location=[50,0], tickdir=1,textpos=1,tickvalues=[0,0.3], target=nop,COORD_TRANSFORM=[0, .2/1], TICKFONT_SIZE=18 ,AXIS_RANGE=[0,3],title='Slope',gridstyle=3,color='g',subgridstyle=3)
       newm.save, stars_format+'.png'
     endif
-    ;axis = axis('Y',location='right',title='Slope of the ring',COORD_TRANSFORM = [-1,1./.7], TICKFONT_SIZE=18)
-    ;sl= plot(-x+rv,slope + .7,overplot=1,color='b',thick=2, name='Slope')
-    ; restore, "scl.sav"
-
-
-    ;newm= plot(r-rv, optd, overplot=1,thick=1, color='g', name='SCL Theory',linestyle=0,min_value=.1)
-    ;leg  = legend(position=[1.04,.8], font_size = 16)
-
-
-    ;  taosigma[-1] = taosigma[-2]
-    ;  taosigma[0]  = taosigma[1]
-    ; print, taosigma
-    ; print, n_elements(optd)
-
-    ;  chi = goodfit2(radius, tao, r, optd, points_in_model, taosigma=taosigma)
-    ;print, 'chi_gampeg032 =', chi_gampeg
-    chi = goodfit3(radius, Irr/I0, r, exp(-optd), points_in_model, stars_format, taosigma = Sqrt(Irr)/I0)
-
-    chis[star_i] = chi
-    ;print, stars[star_i],chi
-  endfor
-
-  Chi_Total = total(chis)
-  print,beta, chi_total/(498.*59. + 497), keyword_set(fit_phase), keyword_set(isotro),epsilon
-
   ;toc
 end
