@@ -189,8 +189,8 @@ pro figure11
   print,'minimum thickness of the haze [km] within the wave =', min(zmax[i:j]-zmin[i:j],k) ;For epsilon=0.5 I get 0.0704 km.
  ; rad2 =rad[i:j] 
  ; print,rad2[k]
-  jju= PLOT(rad,(zmax-zmin)*1000-20.,thick =3,xtitle = 'Distance from resonance [km]',ytitle = 'Haze vertical thickness [m]')
-  jju.font_size = 32
+ ; fig= PLOT(rad,(zmax-zmin)*1000.,thick =3,xtitle = 'Distance from resonance [km]',ytitle = 'Haze vertical thickness [m]')
+ ; fig.font_size = 32
 
   der = ((shift(zmax,-1)-zmax)/(rad[10]-rad[11]))
   print, 'maximum slope of the haze =',max(abs(der[0:-2]))
