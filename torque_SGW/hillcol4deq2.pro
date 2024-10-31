@@ -5,7 +5,7 @@
 ;
 ;3/30/2023 -> created
 ;
-;
+;;This version of wake_rot24.pro is made to run the dynamics in a flat ring and outputs the angle at which the wake settles
 ;
 ;FUNCTION differential, X, Y
 

@@ -80,6 +80,8 @@ pro figure11
 
 
   theta = linspace(0, 3*!dpi) ;This corrrespoinds to for how many periods are the collisions computed
+  COMMON SHAREname, nhits
+  nhits = 1              ; this is the number of times a particle is hit. The particle can get kicked up while returning to the rings, mantaining its momemtum, or just be reabsorbed after a vertical period
 
   !p.multi = [0,0,0]
 
@@ -91,7 +93,7 @@ pro figure11
 
   foreach phi, phis do begin
 
-    haze_creation, phi, theta, omega, i, sigma, 1, epsilon, x, upper, slope, damp, k, A = A, koeffs = koeffs,s=S, plotf=0,c=c ;, landr=1
+    haze_creation, phi, theta, omega, i, sigma, nhits, epsilon, x, upper, slope, damp, k, A = A, koeffs = koeffs,s=S, plotf=0,c=c , landr=1
 
     graph=   plot(theta/(2*!dpi), c[0,0]*cos(theta) + c[1,0]*sin(theta),color=cgcolor('red'),overplot=1,Name=['Motion after collision'])
     if phi eq phis[0] then leg  = legend(position=[.34,.93], font_size = 21,linestyle=6)
@@ -124,14 +126,13 @@ pro figure11
     omega = 4*((G*M/((rv-x[i])*1000)^3)*(1 + J2*(3./2.)*(R/((rv-x[i])*1000))^2 - J4*(15./8.)*(R/((rv-x[i])*1000))^4))^.5 - 4*OmegaM - muM ;This is the driven vertical freq. inside of the wave (it is the same as the natural vertical freq. at resonance).
 
     !p.multi = [0,0,0]
-    nhits = 1
     ind2 = 0
     zs = make_array(n_elements(phis),nhits)
     koeffs = 0
 
 
     foreach phi, phis do begin
-      haze_creation, phi, theta, omega, i, sigma, nhits, epsilon, x, upper, slope, damp, k, A = A, koeffs = koeffs, s=s, fase = fase;,landr=1
+      haze_creation, phi, theta, omega, i, sigma, nhits, epsilon, x, upper, slope, damp, k, A = A, koeffs = koeffs, s=s, fase = fase,landr=1
 
 
       Zs[ind2,*] = koeffs
@@ -188,7 +189,9 @@ pro figure11
   print,'minimum thickness of the haze [km] within the wave =', min(zmax[i:j]-zmin[i:j],k) ;For epsilon=0.5 I get 0.0704 km.
  ; rad2 =rad[i:j] 
  ; print,rad2[k]
- ; PLOT,rad,(zmax-zmin)
+  jju= PLOT(rad,(zmax-zmin)*1000-20.,thick =3,xtitle = 'Distance from resonance [km]',ytitle = 'Haze vertical thickness [m]')
+  jju.font_size = 32
+
   der = ((shift(zmax,-1)-zmax)/(rad[10]-rad[11]))
   print, 'maximum slope of the haze =',max(abs(der[0:-2]))
 
