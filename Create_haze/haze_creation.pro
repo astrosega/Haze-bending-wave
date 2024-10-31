@@ -67,7 +67,7 @@ pro haze_creation, phi, theta, omega, i, sigma, nhits, epsilon, x, upper, slope,
    
       
   if keyword_set(landr) then mu1 = mu - epsilon*(k[i] * sqrt(slope[i]) * s + w)*1/sqrt(2) else  mu1 = mu ;if landr is active, then we include the Doppler shift mentioned in Sega et al 2024, ICARUS. The radial velocity (v_0x in the paper) is computed by assuming that the collision speeds are at a 45° angle in the radial-vertical plane. 
-  ;This only has a small effect and while I include it in Sega et al 2024, I have neglected it since. If for some reason the radial kicks where to be significantly stronger than the vertical kicks the terms will become more important
+  ;This has a small effect and while I include it in Sega et al 2024, I have neglected it since. If for some reason the radial kicks where to be significantly stronger than the vertical kicks the terms will become more important. The effect is to change the thickness of the haze by about 20% within a wavelength.
   ;
   ;This "Doppler shift" of the natural vertical frequency was a way of accounting for the radial travel of the particles after the collision. The effect, however, is small. One can see these equation as the equation of the z-coordinate of the particle above a self-gravity wake in an Eulerian frame, instead of a Z-coordinate that follows an ejected particle.
   ;The difference between these two vertical motions is encompased in this expresion.
