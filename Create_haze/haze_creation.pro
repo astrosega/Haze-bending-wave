@@ -21,7 +21,7 @@
 ;s     --> contant that determined the collision velocity. 'a' in Sega et al 2024
 ;plotf --> keyword. Set to produce plots
 ;fase  --> (optional) phase of the wave. If not set then fase = 0
-;landr --> keyword. stands for "left and rigth." If set, it considers the effects of the radial trravel of particles in the radial and antiradial directions, as well as the vertical travel.
+;landr --> keyword. stands for "left and rigth." If set, it considers the effects of the radial travel of particles in the radial and antiradial directions, as well as the vertical travel.
 ;c     --> output.
 
 ;Output

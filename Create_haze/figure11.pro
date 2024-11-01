@@ -1,6 +1,6 @@
 pro figure11
 
-;Produces the vizualizaton of the haze (figure 11) shown in Sega et al 2024. Requires IDL 8.7.2 or above due to the use of fillplot
+;Produces the vizualizaton of the haze (figure 11) shown in Sega et al 2024. Requires IDL 8.7.2 or above due to the use of fillplot.
 
 ;Requirements
 ;haze_creation.pro   -> (included in this directory) which is the core simulation that computes the trajectories of particles after their collisions with the self-gravity wakes
