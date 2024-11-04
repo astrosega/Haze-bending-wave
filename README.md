@@ -5,7 +5,7 @@ I have included warpers for the main codes that directly plot each figure in the
 
 INSTALATION
 
-The code expects the "magnus" folder, phases1.sav, and stars_robust.sav in the root directory of you IDL instantiation (by default your User or Home folder).
+The ray-tracing code expects the "magnus" folder, phases1.sav, and stars_robust.sav in the root directory of you IDL instantiation (by default your User or Home folder).
 The "magnus" folder contains the UVIS data used, described in Table 2 of Sega et al 2024. phases1.sav contains the observed phase of the wave shown in the same table.
 stars_robust.sav contains geometry parameters for each occultation.
 
