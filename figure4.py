@@ -10,7 +10,7 @@ sim.dt = 1e-3*2.*np.pi/OMEGA
 sim.softening = 0.1       # [m]
 boxsize = 500.            # [m]
 sim.configure_box(boxsize)
-sim.configure_ghostboxes(2,2,0)
+#sim.configure_ghostboxes(2,2,0)
 sim.integrator = "sei"
 sim.boundary   = "shear"
 sim.gravity    = "tree"
