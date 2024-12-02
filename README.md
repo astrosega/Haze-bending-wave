@@ -5,7 +5,9 @@ I have included warpers for the main codes that directly plot each figure in the
 
 INSTALATION
 
-The ray-tracing code expects the "magnus" folder, phases1.sav, and stars_robust.sav in the root directory of you IDL instantiation (by default your User or Home folder). You may also place the .pro files there so that IDL compiles the required functions and procedures automatically.
+There are three main pieces of code for this project, the orbital evolution of haze particles, the ray-tracing, and the dynamical simulation of rigid self-gravity wakes. The ray-tracing code uses haze_func.pro and haze_creation.pro from the haze package to compute the shape of the haze for each occultation, ortherwise the codes are independent. The .pro files in the root of the repository are functions and procedures that need to be compiled for multiple packages. Package-specific function and procedures lie in their respective folders.
+
+The ray-tracing code expects the "magnus" folder, phases1.sav, and stars_robust.sav in the root directory of you IDL instantiation (by default your User or Home folder). You may also place the .pro files there so that IDL compiles the required functions and procedures automatically. The .pro files in the root of the repository are need in multiple packages
 
 The "magnus" folder contains the UVIS data used, described in Table 2 of Sega et al 2024. phases1.sav contains the observed phase of the wave shown in the same table.
 stars_robust.sav contains geometry parameters for each occultation.
