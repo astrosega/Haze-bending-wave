@@ -66,7 +66,7 @@ pro Figure2
   theory = make_array(noccs)
 
 
-  for star_i=0, noccs-1 do begin
+   star_i=0
 
     beta =  p0[0]
     y_add = 0
@@ -577,7 +577,6 @@ pro Figure2
     endif
 
     ;print, stars[star_i],chi
-  endfor
 
 
 end
